@@ -32,7 +32,10 @@ mongoose.connect(process.env.MONGO_URI)
 
 .catch((error)=>{
 
-    console.log("MongoDB Error:",error);
+    console.log(
+        "MongoDB Error:",
+        error
+    );
 
 });
 
@@ -50,15 +53,79 @@ const complaintRoutes = require("./routes/complaintRoutes");
 
 const adminRoutes = require("./routes/adminRoutes");
 
+const collegeRoutes = require("./routes/collegeRoutes");
+
+const sessionRoutes = require("./routes/sessionRoutes");
+
+const complaintTypeRoutes = require("./routes/complaintTypeRoutes");
+
+const adminUserRoutes = require("./routes/adminUserRoutes");
+
+const discussionRoutes = require("./routes/discussionRoutes");
 
 
 
 
-app.use("/api/users", userRoutes);
+// =======================
+// ROUTE CONNECTIONS
+// =======================
 
-app.use("/api/complaints", complaintRoutes);
 
-app.use("/api/admin", adminRoutes);
+app.use(
+"/api/users",
+userRoutes
+);
+
+
+
+app.use(
+"/api/complaints",
+complaintRoutes
+);
+
+
+
+app.use(
+"/api/admin",
+adminRoutes
+);
+
+
+
+app.use(
+"/api/admin/college",
+collegeRoutes
+);
+
+
+
+app.use(
+"/api/admin/session",
+sessionRoutes
+);
+
+
+
+app.use(
+"/api/admin/complaint-types",
+complaintTypeRoutes
+);
+
+
+
+app.use(
+"/api/admin/users",
+adminUserRoutes
+);
+
+
+
+app.use(
+"/api/admin/discussions",
+discussionRoutes
+);
+
+
 
 
 
@@ -70,9 +137,13 @@ app.use("/api/admin", adminRoutes);
 
 app.get("/",(req,res)=>{
 
-    res.send("GRS Backend Running");
+    res.send(
+        "GRS Backend Running"
+    );
 
 });
+
+
 
 
 
@@ -82,13 +153,13 @@ app.get("/",(req,res)=>{
 // SERVER START
 // =======================
 
-
 const PORT = process.env.PORT || 5000;
-
 
 
 app.listen(PORT,()=>{
 
-    console.log(`Server running on port ${PORT}`);
+    console.log(
+        `Server running on port ${PORT}`
+    );
 
 });

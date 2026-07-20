@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
-const College = require("../models/College");
-const Session = require("../models/Session");
-const ComplaintType = require("../models/ComplaintType");
+const Complaint = require("../models/Complaint");
+const User = require("../models/User");
+const Admin = require("../models/Admin");
 
 
 
-
-// ================= ADMIN LOGIN =================
-
+// =========================
+// ADMIN LOGIN
+// =========================
 
 router.post("/login", async(req,res)=>{
 
@@ -18,42 +18,51 @@ try{
 const {email,password}=req.body;
 
 
-if(
-email==="admin@lnmu.com" &&
-password==="admin123"
-){
+const admin = await Admin.findOne({
+email
+});
 
-return res.json({
+
+if(!admin){
+
+return res.status(404).json({
+message:"Admin not found"
+});
+
+}
+
+
+
+if(admin.password !== password){
+
+return res.status(401).json({
+message:"Invalid password"
+});
+
+}
+
+
+
+res.json({
 
 message:"Login successful",
 
-token:"admin-token-123",
-
 admin:{
-name:"Admin",
-email:"admin@lnmu.com"
+id:admin._id,
+name:admin.name,
+email:admin.email
 }
 
 });
 
-}
-
-
-res.status(401).json({
-
-message:"Invalid email or password"
-
-});
-
 
 }
-
 catch(error){
 
+console.log(error);
+
 res.status(500).json({
-
-message:error.message
-
+message:"Server Error"
 });
 
 }
@@ -66,124 +75,78 @@ message:error.message
 
 
 
+// =========================
+// CHANGE PASSWORD
+// =========================
 
+router.put("/change-password", async(req,res)=>{
 
-// =================================================
-//                  COLLEGE MANAGEMENT
-// =================================================
-
-
-// ADD COLLEGE
-
-router.post("/college", async(req,res)=>{
 
 try{
 
 
-const college = await College.create({
-
-name:req.body.name,
-
-createdBy:"Admin"
-
-});
+const {
+email,
+oldPassword,
+newPassword
+}=req.body;
 
 
-res.status(201).json(college);
 
-
-}
-
-catch(error){
-
-res.status(500).json({
-
-message:error.message
-
-});
-
-}
-
+const admin = await Admin.findOne({
+email
 });
 
 
 
+if(!admin){
 
-
-
-
-
-// GET ALL COLLEGES
-
-
-router.get("/college", async(req,res)=>{
-
-try{
-
-
-const colleges = await College.find()
-.sort({createdAt:-1});
-
-
-res.json(colleges);
-
-
-}
-
-catch(error){
-
-res.status(500).json({
-
-message:error.message
-
+return res.status(404).json({
+message:"Admin not found"
 });
 
 }
 
+
+
+if(admin.password !== oldPassword){
+
+return res.status(400).json({
+message:"Old password incorrect"
 });
 
+}
 
 
 
+admin.password = newPassword;
 
-
-
-
-// DELETE COLLEGE
-
-
-router.delete("/college/:id", async(req,res)=>{
-
-try{
-
-
-await College.findByIdAndDelete(
-
-req.params.id
-
-);
+await admin.save();
 
 
 
 res.json({
 
-message:"College deleted successfully"
+message:"Password changed successfully"
 
 });
 
 
 }
-
 catch(error){
+
+console.log(error);
+
 
 res.status(500).json({
 
-message:error.message
+message:"Server Error"
 
 });
 
 }
 
+
 });
 
 
@@ -193,182 +156,73 @@ message:error.message
 
 
 
-// UPDATE COLLEGE
+// =========================
+// DASHBOARD STATS
+// =========================
 
+router.get("/stats", async(req,res)=>{
 
-router.put("/college/:id", async(req,res)=>{
 
 try{
 
 
-const college = await College.findByIdAndUpdate(
-
-req.params.id,
-
-{
-
-name:req.body.name
-
-},
-
-{
-
-new:true
-
-}
-
-);
+const totalComplaints =
+await Complaint.countDocuments();
 
 
-res.json(college);
-
-
-}
-
-catch(error){
-
-res.status(500).json({
-
-message:error.message
-
-});
-
-}
-
+const pending =
+await Complaint.countDocuments({
+status:"Pending"
 });
 
 
-
-
-
-
-
-
-
-
-
-// =================================================
-//                  SESSION MANAGEMENT
-// =================================================
-
-
-
-// ADD SESSION
-
-
-router.post("/session", async(req,res)=>{
-
-try{
-
-
-const session = await Session.create({
-
-name:req.body.name,
-
-createdBy:"Admin"
-
+const resolved =
+await Complaint.countDocuments({
+status:"Resolved"
 });
 
 
-res.status(201).json(session);
-
-
-}
-
-catch(error){
-
-res.status(500).json({
-
-message:error.message
-
-});
-
-}
-
+const rejected =
+await Complaint.countDocuments({
+status:"Rejected"
 });
 
 
-
-
-
-
-
-
-
-
-// GET ALL SESSIONS
-
-
-router.get("/session", async(req,res)=>{
-
-try{
-
-
-const sessions = await Session.find()
-.sort({createdAt:-1});
-
-
-res.json(sessions);
-
-
-}
-
-catch(error){
-
-res.status(500).json({
-
-message:error.message
-
-});
-
-}
-
-});
-
-
-
-
-
-
-
-
-
-
-// DELETE SESSION
-
-
-router.delete("/session/:id", async(req,res)=>{
-
-try{
-
-
-await Session.findByIdAndDelete(
-
-req.params.id
-
-);
+const users =
+await User.countDocuments();
 
 
 
 res.json({
 
-message:"Session deleted successfully"
+totalComplaints,
+
+pending,
+
+resolved,
+
+rejected,
+
+users
 
 });
 
 
 }
-
 catch(error){
+
+console.log(error);
+
 
 res.status(500).json({
 
-message:error.message
+message:"Server Error"
 
 });
 
 }
 
+
 });
 
 
@@ -379,50 +233,186 @@ message:error.message
 
 
 
+// =========================
+// GET ALL COMPLAINTS
+// =========================
 
-// UPDATE SESSION
+router.get("/complaints", async(req,res)=>{
 
-
-router.put("/session/:id", async(req,res)=>{
 
 try{
 
 
-const session = await Session.findByIdAndUpdate(
+const complaints =
+await Complaint.find()
+
+.populate(
+"userId",
+"name email"
+)
+
+.sort({
+createdAt:-1
+});
+
+
+
+res.json(complaints);
+
+
+
+}
+catch(error){
+
+console.log(error);
+
+
+res.status(500).json({
+
+message:"Server Error"
+
+});
+
+}
+
+
+});
+
+
+
+
+
+
+
+
+
+
+// =========================
+// GET SINGLE COMPLAINT
+// =========================
+
+router.get("/complaints/:id", async(req,res)=>{
+
+
+try{
+
+
+const complaint =
+await Complaint.findById(
+req.params.id
+)
+
+.populate(
+"userId",
+"name email"
+);
+
+
+
+if(!complaint){
+
+return res.status(404).json({
+
+message:"Complaint not found"
+
+});
+
+}
+
+
+
+res.json(complaint);
+
+
+
+}
+catch(error){
+
+console.log(error);
+
+
+res.status(500).json({
+
+message:"Server Error"
+
+});
+
+}
+
+
+});
+
+
+
+
+
+
+
+
+
+// =========================
+// UPDATE COMPLAINT STATUS
+// =========================
+
+router.put("/complaints/:id", async(req,res)=>{
+
+
+try{
+
+
+const updatedComplaint =
+
+await Complaint.findByIdAndUpdate(
 
 req.params.id,
 
 {
 
-name:req.body.name
+status:req.body.status,
+
+adminRemark:req.body.adminRemark
 
 },
 
 {
-
 new:true
-
 }
 
 );
 
 
 
-res.json(session);
+if(!updatedComplaint){
 
+return res.status(404).json({
+
+message:"Complaint not found"
+
+});
 
 }
 
+
+
+res.json(updatedComplaint);
+
+
+
+}
 catch(error){
+
+console.log(error);
+
 
 res.status(500).json({
 
-message:error.message
+message:"Server Error"
 
 });
 
 }
 
+
 });
 
 
@@ -433,200 +423,59 @@ message:error.message
 
 
 
+// =========================
+// DELETE COMPLAINT
+// =========================
 
-
-// =================================================
-//              COMPLAINT TYPE MANAGEMENT
-// =================================================
-
-
-
-
-// ADD COMPLAINT TYPE
-
-
-router.post("/complaint-types", async(req,res)=>{
+router.delete("/complaints/:id", async(req,res)=>{
 
 
 try{
 
 
-const complaintType = await ComplaintType.create({
+const deletedComplaint =
 
-name:req.body.name,
-
-createdBy:"Admin"
-
-});
-
-
-res.status(201).json(complaintType);
-
-
-}
-
-catch(error){
-
-
-res.status(500).json({
-
-message:error.message
-
-});
-
-
-}
-
-
-});
-
-
-
-
-
-
-
-
-
-// GET ALL COMPLAINT TYPES
-
-
-router.get("/complaint-types", async(req,res)=>{
-
-
-try{
-
-
-const complaintTypes = await ComplaintType.find()
-.sort({createdAt:-1});
-
-
-res.json(complaintTypes);
-
-
-}
-
-catch(error){
-
-
-res.status(500).json({
-
-message:error.message
-
-});
-
-
-}
-
-
-});
-
-
-
-
-
-
-
-
-
-// DELETE COMPLAINT TYPE
-
-
-router.delete("/complaint-types/:id", async(req,res)=>{
-
-
-try{
-
-
-await ComplaintType.findByIdAndDelete(
-
+await Complaint.findByIdAndDelete(
 req.params.id
-
 );
+
+
+
+if(!deletedComplaint){
+
+return res.status(404).json({
+
+message:"Complaint not found"
+
+});
+
+}
 
 
 
 res.json({
 
-message:"Complaint type deleted successfully"
+message:"Complaint deleted successfully"
 
 });
 
 
 }
-
 catch(error){
+
+console.log(error);
 
 
 res.status(500).json({
 
-message:error.message
+message:"Server Error"
 
 });
-
 
 }
 
 
 });
-
-
-
-
-
-
-
-
-
-// UPDATE COMPLAINT TYPE
-
-
-router.put("/complaint-types/:id", async(req,res)=>{
-
-
-try{
-
-
-const complaintType = await ComplaintType.findByIdAndUpdate(
-
-req.params.id,
-
-{
-
-name:req.body.name
-
-},
-
-{
-
-new:true
-
-}
-
-);
-
-
-
-res.json(complaintType);
-
-
-}
-
-catch(error){
-
-
-res.status(500).json({
-
-message:error.message
-
-});
-
-
-}
-
-
-});
-
 
 
 
