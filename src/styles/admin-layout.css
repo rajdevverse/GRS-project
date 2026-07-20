@@ -1,0 +1,42 @@
+/* MAIN WRAPPER */
+
+.admin-layout{
+
+    min-height:100vh;
+
+    background:#f8fafc;
+
+}
+
+
+/* CONTENT AREA */
+
+.admin-content{
+
+    margin-left:260px;
+
+    padding:25px;
+
+    width:calc(100% - 260px);
+
+    min-height:100vh;
+
+    box-sizing:border-box;
+
+}
+
+
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.admin-content{
+
+    margin-left:0;
+
+    width:100%;
+
+}
+
+}

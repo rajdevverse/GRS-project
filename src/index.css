@@ -1,0 +1,424 @@
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f8fafc;
+}
+
+
+/* ================= HOME PAGE ================= */
+
+.seal-circle {
+  width: 130px;
+  height: 130px;
+  border: 4px solid #dc2626;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 2.5rem;
+  color: #dc2626;
+}
+
+
+.portal-title {
+  font-family: Georgia, "Times New Roman", serif;
+  color: #2563eb;
+}
+
+
+.portal-cards {
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:35px;
+  margin-top:50px;
+  flex-wrap:wrap;
+
+}
+
+
+.portal-card {
+
+  background:white;
+  padding:35px;
+  width:320px;
+  min-height:260px;
+  border-radius:18px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.12);
+  transition:0.3s;
+
+}
+
+
+.portal-card:hover {
+
+  transform:translateY(-8px);
+
+}
+
+
+.portal-card button {
+
+  background:#1e3a8a;
+  color:white;
+  border:none;
+  padding:12px 25px;
+  border-radius:8px;
+  cursor:pointer;
+
+}
+
+
+.home-container {
+
+  text-align:center;
+  padding:40px;
+
+}
+
+
+.home-container h1 {
+
+  font-size:40px;
+  color:#0f172a;
+
+}
+
+
+/* ================= FOOTER ================= */
+
+
+.footer-bar {
+
+  background-color:#2563eb;
+  color:white;
+
+}
+
+
+
+/* ================= AUTH PAGES ================= */
+
+
+.auth-page {
+
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#f1f5f9;
+
+}
+
+
+.auth-card {
+
+  width:420px;
+  background:white;
+  padding:35px;
+  border-radius:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+
+}
+
+
+.auth-card h2 {
+
+  text-align:center;
+  margin-bottom:25px;
+  color:#0f172a;
+
+}
+
+
+.auth-card input {
+
+  width:100%;
+  padding:12px;
+  margin-bottom:15px;
+  border:1px solid #cbd5e1;
+  border-radius:8px;
+
+}
+
+
+.auth-card button {
+
+  width:100%;
+  padding:12px;
+  background:#1e3a8a;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  cursor:pointer;
+
+}
+
+
+.auth-card button:hover {
+
+  background:#2563eb;
+
+}
+
+
+.auth-card p {
+
+  text-align:center;
+  margin-top:20px;
+
+}
+
+
+
+/* ================= ADMIN LOGIN ================= */
+
+
+.admin-bg {
+
+  min-height:100vh;
+  background:
+  linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#4c1d95 100%);
+
+}
+
+
+.admin-card-header {
+
+  background:
+  linear-gradient(135deg,#4338ca 0%,#7e22ce 100%);
+  border-radius:1rem 1rem 0 0;
+
+}
+
+
+.admin-icon-box {
+
+  width:56px;
+  height:56px;
+  background:rgba(255,255,255,0.15);
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  font-size:1.5rem;
+  color:white;
+
+}
+
+
+.badge-restricted {
+
+  background:#eef2ff;
+  color:#4f46e5;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:1px;
+  padding:.4rem .9rem;
+
+}
+
+
+.btn-admin-gradient {
+
+  background:
+  linear-gradient(135deg,#4f46e5 0%,#9333ea 100%);
+  border:none;
+  color:white;
+  font-weight:600;
+
+}
+
+
+.btn-admin-gradient:hover {
+
+  background:
+  linear-gradient(135deg,#4338ca 0%,#7e22ce 100%);
+  color:white;
+
+}
+
+
+
+/* ================= USER LOGIN ================= */
+
+
+.user-login-left {
+
+  min-height:100vh;
+  background:
+  linear-gradient(160deg,#0f172a 0%,#1e293b 50%,#1e3a8a 100%);
+
+}
+
+
+.user-login-icon-box {
+
+  width:64px;
+  height:64px;
+  border-radius:16px;
+  background:
+  linear-gradient(135deg,#3b82f6,#4f46e5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:1.75rem;
+
+}
+
+
+.feature-icon-badge {
+
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#93c5fd;
+
+}
+
+
+.btn-blue-gradient {
+
+  background:
+  linear-gradient(135deg,#2563eb 0%,#4f46e5 100%);
+  border:none;
+  color:white;
+  font-weight:600;
+
+}
+
+
+.btn-blue-gradient:hover {
+
+  background:
+  linear-gradient(135deg,#1d4ed8 0%,#4338ca 100%);
+  color:white;
+
+}
+
+
+
+.small-seal {
+
+  width:48px;
+  height:48px;
+  border:2px solid #dc2626;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#dc2626;
+
+}
+
+
+
+/* ================= USER REGISTER ================= */
+
+
+.user-register-left {
+
+  min-height:100vh;
+  background:
+  linear-gradient(160deg,#0f172a 0%,#022c22 50%,#065f46 100%);
+
+}
+
+
+.register-icon-box {
+
+  width:64px;
+  height:64px;
+  border-radius:16px;
+  background:
+  linear-gradient(135deg,#10b981,#0d9488);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:1.75rem;
+
+}
+
+
+.step-item {
+
+  border-left:2px solid #065f46;
+  padding-bottom:1.25rem;
+  padding-left:1rem;
+  margin-left:1rem;
+  position:relative;
+
+}
+
+
+.step-badge {
+
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:#064e3b;
+  border:2px solid #10b981;
+  color:#a7f3d0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:absolute;
+  left:-1.9rem;
+
+}
+
+
+.progress-circle {
+
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+}
+
+
+.progress-circle-filled {
+
+  background:#10b981;
+  color:white;
+
+}
+
+
+.progress-circle-outline {
+
+  background:white;
+  color:#adb5bd;
+  border:1px solid #ced4da;
+
+}
+
+
+.btn-green {
+
+  background:#059669;
+  border:none;
+  color:white;
+  font-weight:600;
+
+}
+
+
+.btn-green:hover {
+
+  background:#047857;
+  color:white;
+
+}
