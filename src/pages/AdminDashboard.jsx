@@ -3,91 +3,79 @@ import "../styles/admin-dashboard.css";
 
 function AdminDashboard(){
 
-
-const stats=[
+const stats = [
 
 {
-title:"Total Users",
-count:3,
-icon:"👥",
-class:"users"
+title:"TOTAL USERS",
+count:"120",
+icon:"bi-people",
+color:"blue"
 },
 
 
 {
-title:"Not Processed",
-count:0,
-icon:"📂",
-class:"processed"
+title:"TOTAL COMPLAINTS",
+count:"85",
+icon:"bi-file-earmark-text",
+color:"red"
 },
 
 
 {
-title:"Pending",
-count:2,
-icon:"⏳",
-class:"pending"
+title:"PENDING",
+count:"25",
+icon:"bi-clock-history",
+color:"yellow"
 },
 
 
 {
-title:"Closed",
-count:1,
-icon:"✅",
-class:"closed"
+title:"CLOSED",
+count:"50",
+icon:"bi-check-circle",
+color:"green"
 },
 
 
 {
-title:"Total Colleges",
-count:0,
-icon:"🏫",
-class:"colleges"
+title:"BLOCKED USERS",
+count:"10",
+icon:"bi-person-x",
+color:"purple"
 },
 
 
 {
-title:"Blocked Users",
-count:0,
-icon:"🚫",
-class:"blocked"
+title:"TOTAL COLLEGES",
+count:"8",
+icon:"bi-building",
+color:"pink"
 }
 
 ];
 
 
 
-
 return(
 
-<div className="admin-dashboard">
-
+<div className="dashboard">
 
 
 <h1>
-Admin Panel
+Dashboard Overview
 </h1>
 
 
+<p className="subtitle">
 
-<h2 className="dashboard-title">
-Dashboard Overview
-</h2>
-
-
-
-<p className="dashboard-subtitle">
-
-Welcome back, Admin. Here is what is happening today.
+Welcome back, Administrator. Here's what's happening today.
 
 </p>
 
 
 
 
-
-
-<div className="admin-stats">
+<div className="dashboard-cards">
 
 
 {
@@ -96,38 +84,41 @@ stats.map((item,index)=>(
 
 
 <div 
-className={`admin-card ${item.class}`}
+className="stat-card"
 key={index}
 >
 
 
-<div className="card-icon">
+<div className={`icon-box ${item.color}`}>
 
-{item.icon}
+<i className={`bi ${item.icon}`}></i>
 
 </div>
 
 
 
-<div className="card-content">
-
-
-<h3>
-{item.title}
-</h3>
+<div>
 
 
 <h2>
+
 {item.count}
+
 </h2>
 
 
+<p>
+
+{item.title}
+
+</p>
+
 
 </div>
 
 
-</div>
 
+</div>
 
 
 ))
@@ -142,8 +133,8 @@ key={index}
 
 
 
-
 </div>
+
 
 )
 

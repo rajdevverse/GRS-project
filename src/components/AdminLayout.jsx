@@ -1,5 +1,7 @@
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
+import AdminTopbar from "./AdminTopbar";
+
 import "../styles/admin-layout.css";
 
 
@@ -9,13 +11,24 @@ return(
 
 <div className="admin-layout">
 
-    <AdminSidebar />
 
-    <main className="admin-content">
+<AdminSidebar />
 
-        <Outlet />
 
-    </main>
+<div className="admin-wrapper">
+
+
+<AdminTopbar />
+
+
+<main className="admin-content">
+
+<Outlet />
+
+</main>
+
+
+</div>
 
 
 </div>

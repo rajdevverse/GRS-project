@@ -1,79 +1,27 @@
 .college-page{
 
-    padding:10px;
+padding:30px;
 
-}
+background:#f4f6fa;
 
-
-.college-page h1{
-
-    font-size:28px;
-
-    color:#0f172a;
-
-    margin-bottom:25px;
-
-}
-
-
-
-/* ADD COLLEGE */
-
-.college-add-card,
-.college-table-card{
-
-
-    background:white;
-
-    padding:25px;
-
-    border-radius:16px;
-
-    box-shadow:0 6px 18px rgba(15,23,42,.08);
-
-    margin-bottom:25px;
-
-
-}
-
-
-
-.college-add-card h2,
-.college-table-card h2{
-
-    color:#0f172a;
-
-    margin-bottom:20px;
+min-height:100%;
 
 }
 
 
 
 
-.college-add-card label{
+.college-card{
 
-    display:block;
+background:white;
 
-    color:#475569;
+padding:30px;
 
-    margin-bottom:8px;
+border-radius:18px;
 
-}
+box-shadow:0 5px 20px rgba(0,0,0,0.06);
 
-
-
-.college-add-card input{
-
-
-    width:100%;
-
-    padding:13px;
-
-    border:1px solid #cbd5e1;
-
-    border-radius:10px;
-
-    margin-bottom:15px;
+margin-bottom:30px;
 
 }
 
@@ -81,23 +29,17 @@
 
 
 
-.college-add-card button{
+.college-card h2{
 
+text-align:center;
 
-    background:#2563eb;
+color:#2563eb;
 
-    color:white;
+font-size:26px;
 
-    border:none;
+font-weight:800;
 
-    padding:12px 25px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    font-weight:600;
-
+margin-bottom:25px;
 
 }
 
@@ -105,84 +47,163 @@
 
 
 
-/* TABLE */
+.college-card label{
 
-.table-tools{
+display:block;
 
-    display:flex;
+font-weight:600;
 
-    justify-content:space-between;
+color:#334155;
 
-    align-items:center;
-
-    margin-bottom:20px;
+margin-bottom:8px;
 
 }
 
 
 
-.table-tools input,
-.table-tools select{
 
+.college-card input{
 
-    padding:10px;
+width:100%;
 
-    border:1px solid #cbd5e1;
+padding:14px;
 
-    border-radius:8px;
+border:none;
+
+background:#f1f5f9;
+
+border-radius:10px;
+
+font-size:15px;
+
+margin-bottom:20px;
+
+outline:none;
 
 }
+
+
+
+
+
+.college-card button{
+
+display:block;
+
+margin:auto;
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+padding:12px 35px;
+
+border-radius:10px;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+
+
+
+
+.college-card button:hover{
+
+background:#1d4ed8;
+
+}
+
+
 
 
 
 table{
 
-    width:100%;
+width:100%;
 
-    border-collapse:collapse;
+border-collapse:collapse;
 
 }
+
+
 
 
 
 th{
 
-    text-align:left;
+background:#f8fafc;
 
-    padding:14px;
+padding:15px;
 
-    background:#f1f5f9;
+text-align:left;
 
-    color:#334155;
+font-size:14px;
+
+color:#475569;
 
 }
+
+
 
 
 
 td{
 
-    padding:14px;
+padding:15px;
 
-    border-bottom:1px solid #e2e8f0;
+border-bottom:1px solid #e5e7eb;
 
-}
-
-
-
-.no-data{
-
-    text-align:center;
-
-    color:#64748b;
+color:#334155;
 
 }
 
 
 
-.entry-text{
 
-    color:#64748b;
 
-    margin-top:15px;
+.edit-btn{
+
+background:white!important;
+
+color:#2563eb!important;
+
+border:1px solid #2563eb!important;
+
+padding:8px 18px!important;
+
+margin-right:10px!important;
+
+}
+
+
+
+
+
+.delete-btn{
+
+background:#dc2626!important;
+
+color:white!important;
+
+padding:8px 18px!important;
+
+}
+
+
+
+
+
+td[colspan="4"]{
+
+text-align:center;
+
+color:#94a3b8;
+
+padding:30px;
 
 }

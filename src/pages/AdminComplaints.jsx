@@ -1,184 +1,126 @@
-import { useEffect, useState } from "react";
 import "../styles/admin-complaints.css";
 
 
 function AdminComplaints(){
 
 
-const [complaints,setComplaints] = useState([]);
-
-
-
-
-
-const fetchComplaints = async()=>{
-
-
-try{
-
-
-const response = await fetch(
-
-"http://localhost:5000/api/complaints"
-
-);
-
-
-
-const data = await response.json();
-
-
-setComplaints(data);
-
-
-
-}
-
-catch(error){
-
-console.log(error);
-
-}
-
-
-};
-
-
-
-
-
-
-
-useEffect(()=>{
-
-
-fetchComplaints();
-
-
-},[]);
-
-
-
-
-
-
-
-
-const updateStatus = async(id,status)=>{
-
-
-try{
-
-
-await fetch(
-
-`http://localhost:5000/api/complaints/${id}`,
+const complaints = [
 
 {
-
-method:"PUT",
-
-headers:{
-
-"Content-Type":"application/json"
-
+id:1,
+title:"Hostel Water Issue",
+student:"Rahul Sharma",
+category:"Hostel",
+status:"Pending"
 },
 
-body:JSON.stringify({
 
-status
+{
+id:2,
+title:"Library Timing Problem",
+student:"Amit Kumar",
+category:"Library",
+status:"Closed"
+},
 
-})
 
+{
+id:3,
+title:"Exam Form Issue",
+student:"Neha Singh",
+category:"Exam",
+status:"Not Processed"
 }
 
-);
-
-
-
-fetchComplaints();
-
-
-}
-
-
-catch(error){
-
-console.log(error);
-
-}
-
-
-};
-
-
-
-
+];
 
 
 
 return(
 
-
-<div className="admin-complaints-page">
-
+<div className="complaints-page">
 
 
-<h1>
-Complaints Management
-</h1>
+<div className="complaints-card">
 
 
-<p>
-Manage and update student grievances
-</p>
+<div className="complaints-header">
 
 
+<h2>
+All Complaints
+</h2>
 
 
+<div className="table-controls">
 
 
-<div className="complaints-table-card">
+<select>
+
+<option>
+10
+</option>
+
+<option>
+25
+</option>
+
+<option>
+50
+</option>
+
+</select>
+
+
+<input
+type="text"
+placeholder="Search complaints..."
+/>
+
+
+</div>
+
+
+</div>
+
+
 
 
 
 <table>
 
 
-
 <thead>
-
 
 <tr>
 
-
 <th>
-Complaint No
+S NO.
 </th>
 
 
 <th>
-Title
+STUDENT
 </th>
 
 
 <th>
-Category
+COMPLAINT
 </th>
 
 
 <th>
-Description
+CATEGORY
 </th>
 
 
 <th>
-Status
+STATUS
 </th>
 
 
 <th>
-Action
+ACTION
 </th>
 
 
@@ -190,86 +132,59 @@ Action
 
 
 
-
 <tbody>
-
 
 
 {
 
-complaints.map((complaint)=>(
+complaints.map((item,index)=>(
 
 
-<tr key={complaint._id}>
+<tr key={item.id}>
 
 
 <td>
-
-{complaint.complaintId || "Old"}
-
+{index+1}
 </td>
 
 
 
 <td>
-
-{complaint.title}
-
+{item.student}
 </td>
 
 
 
 <td>
-
-{complaint.category}
-
+{item.title}
 </td>
-
 
 
 
 <td>
-
-{complaint.description}
-
+{item.category}
 </td>
-
 
 
 
 
 <td>
 
-
-<span
-
+<span 
 className={
-
-complaint.status==="Resolved"
-
+item.status==="Pending"
 ?
-
-"status resolved"
-
-:
-
-complaint.status==="In Progress"
-
-?
-
-"status progress"
-
-:
-
 "status pending"
-
+:
+item.status==="Closed"
+?
+"status closed"
+:
+"status process"
 }
-
 >
 
-
-{complaint.status}
-
+{item.status}
 
 </span>
 
@@ -279,52 +194,24 @@ complaint.status==="In Progress"
 
 
 
-
 <td>
 
 
-<select
+<button className="view-btn">
+
+View
+
+</button>
 
 
-value={complaint.status}
+<button className="delete-btn">
 
+Delete
 
-onChange={(e)=>
-
-updateStatus(
-
-complaint._id,
-
-e.target.value
-
-)
-
-}
-
-
->
-
-
-<option>
-Pending
-</option>
-
-
-<option>
-In Progress
-</option>
-
-
-<option>
-Resolved
-</option>
-
-
-</select>
+</button>
 
 
 </td>
-
 
 
 
@@ -338,13 +225,51 @@ Resolved
 
 
 
-
 </tbody>
 
 
 
-
 </table>
+
+
+
+<div className="table-footer">
+
+
+<p>
+Showing 1 to {complaints.length} of {complaints.length} entries
+</p>
+
+
+
+<div className="pagination">
+
+<button>
+«
+</button>
+
+<button>
+‹
+</button>
+
+<button className="active-page">
+1
+</button>
+
+<button>
+›
+</button>
+
+<button>
+»
+</button>
+
+
+</div>
+
+
+
+</div>
 
 
 
@@ -358,7 +283,6 @@ Resolved
 )
 
 }
-
 
 
 export default AdminComplaints;

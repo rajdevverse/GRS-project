@@ -1,42 +1,29 @@
-/* MAIN WRAPPER */
-
 .admin-layout{
 
-    min-height:100vh;
+display:flex;
 
-    background:#f8fafc;
+min-height:100vh;
+
+background:#f4f6fa;
 
 }
 
 
-/* CONTENT AREA */
+
+.admin-wrapper{
+
+margin-left:260px;
+
+width:calc(100% - 260px);
+
+padding:20px;
+
+}
+
+
 
 .admin-content{
 
-    margin-left:260px;
-
-    padding:25px;
-
-    width:calc(100% - 260px);
-
-    min-height:100vh;
-
-    box-sizing:border-box;
-
-}
-
-
-
-/* MOBILE */
-
-@media(max-width:900px){
-
-.admin-content{
-
-    margin-left:0;
-
-    width:100%;
-
-}
+width:100%;
 
 }

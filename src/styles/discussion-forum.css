@@ -1,4 +1,4 @@
-.complaints-page{
+.discussion-page{
 
 padding:30px;
 
@@ -10,7 +10,7 @@ min-height:100%;
 
 
 
-.complaints-card{
+.discussion-card{
 
 background:white;
 
@@ -24,8 +24,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.05);
 
 
 
-
-.complaints-header{
+.discussion-header{
 
 display:flex;
 
@@ -39,7 +38,7 @@ margin-bottom:25px;
 
 
 
-.complaints-header h2{
+.discussion-header h2{
 
 font-size:24px;
 
@@ -51,9 +50,7 @@ color:#0f172a;
 
 
 
-
-
-.table-controls{
+.discussion-controls{
 
 display:flex;
 
@@ -63,18 +60,16 @@ gap:15px;
 
 
 
-
-.table-controls input,
-.table-controls select{
+.discussion-controls input,
+.discussion-controls select{
 
 padding:10px 15px;
 
-border-radius:8px;
-
 border:1px solid #ddd;
 
-}
+border-radius:8px;
 
+}
 
 
 
@@ -96,10 +91,6 @@ padding:14px;
 
 text-align:left;
 
-font-size:14px;
-
-color:#475569;
-
 }
 
 
@@ -110,78 +101,11 @@ padding:14px;
 
 border-bottom:1px solid #eee;
 
-color:#334155;
-
 }
 
 
 
-
-.status{
-
-padding:6px 12px;
-
-border-radius:20px;
-
-font-size:12px;
-
-font-weight:700;
-
-}
-
-
-
-.pending{
-
-background:#fef3c7;
-
-color:#b45309;
-
-}
-
-
-
-.closed{
-
-background:#dcfce7;
-
-color:#15803d;
-
-}
-
-
-
-.process{
-
-background:#fee2e2;
-
-color:#dc2626;
-
-}
-
-
-
-
-.view-btn{
-
-background:#2563eb;
-
-color:white;
-
-border:none;
-
-padding:8px 15px;
-
-border-radius:7px;
-
-margin-right:8px;
-
-}
-
-
-
-
-.delete-btn{
+.delete-question{
 
 background:#dc2626;
 
@@ -193,12 +117,15 @@ padding:8px 15px;
 
 border-radius:7px;
 
+cursor:pointer;
+
 }
 
 
 
+.discussion-footer{
 
-.table-footer{
+margin-top:20px;
 
 display:flex;
 
@@ -206,23 +133,21 @@ justify-content:space-between;
 
 align-items:center;
 
-margin-top:20px;
-
 color:#64748b;
 
 }
 
 
 
-.pagination button{
+.discussion-footer button{
 
 padding:8px 12px;
+
+margin-left:5px;
 
 border:1px solid #ddd;
 
 background:white;
-
-margin-left:5px;
 
 border-radius:5px;
 
@@ -230,9 +155,9 @@ border-radius:5px;
 
 
 
-.active-page{
+.discussion-footer .active{
 
-background:#2563eb!important;
+background:#2563eb;
 
 color:white;
 

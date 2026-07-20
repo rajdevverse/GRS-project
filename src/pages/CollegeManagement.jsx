@@ -1,18 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/college-management.css";
 
 
 function CollegeManagement(){
 
 
-const [college,setCollege]=useState("");
+const [collegeName,setCollegeName] = useState("");
+
+const [colleges,setColleges] = useState([]);
 
 
 
-const addCollege=()=>{
 
 
-if(!college){
+// GET COLLEGES
+
+const fetchColleges = async()=>{
+
+
+try{
+
+
+const res = await fetch(
+"http://localhost:5000/api/admin/college"
+);
+
+
+const data = await res.json();
+
+
+setColleges(data);
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+
+};
+
+
+
+
+
+
+
+useEffect(()=>{
+
+fetchColleges();
+
+},[]);
+
+
+
+
+
+
+
+
+// ADD COLLEGE
+
+
+const addCollege = async()=>{
+
+
+if(!collegeName){
 
 alert("Enter college name");
 
@@ -21,12 +77,100 @@ return;
 }
 
 
-alert("College added successfully");
+
+try{
 
 
-setCollege("");
+await fetch(
+"http://localhost:5000/api/admin/college",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+
+body:JSON.stringify({
+
+name:collegeName
+
+})
+
+
+}
+
+);
+
+
+
+setCollegeName("");
+
+fetchColleges();
+
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
 
 };
+
+
+
+
+
+
+
+
+// DELETE COLLEGE
+
+
+const deleteCollege = async(id)=>{
+
+
+try{
+
+
+await fetch(
+
+`http://localhost:5000/api/admin/college/${id}`,
+
+{
+
+method:"DELETE"
+
+}
+
+);
+
+
+
+fetchColleges();
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+
+};
+
+
+
+
 
 
 
@@ -37,13 +181,12 @@ return(
 
 
 
-<h1>
-College Management
-</h1>
 
 
+{/* ADD COLLEGE CARD */}
 
-<div className="college-add-card">
+
+<div className="college-card">
 
 
 <h2>
@@ -59,21 +202,21 @@ College Name
 
 <input
 
-type="text"
+value={collegeName}
 
-placeholder="Enter College Name"
+onChange={(e)=>setCollegeName(e.target.value)}
 
-value={college}
-
-onChange={(e)=>setCollege(e.target.value)}
+placeholder="Enter college name"
 
 />
 
 
 
-<button onClick={addCollege}>
+<button
+onClick={addCollege}
+>
 
-Add College
+Save College
 
 </button>
 
@@ -86,50 +229,18 @@ Add College
 
 
 
-<div className="college-table-card">
+
+
+
+{/* TABLE */}
+
+
+<div className="college-card">
 
 
 <h2>
 Registered Colleges
 </h2>
-
-
-
-<div className="table-tools">
-
-
-<select>
-
-<option>
-10
-</option>
-
-<option>
-25
-</option>
-
-<option>
-50
-</option>
-
-</select>
-
-
-<span>
-entries per page
-</span>
-
-
-
-<input
-
-placeholder="Search records..."
-
-/>
-
-
-
-</div>
 
 
 
@@ -143,45 +254,120 @@ placeholder="Search records..."
 <tr>
 
 <th>
-S No.
+S NO.
 </th>
 
 
 <th>
-College Name
+COLLEGE NAME
 </th>
 
 
 <th>
-Created By
+CREATED BY
 </th>
 
 
 <th>
-Actions
+ACTION
 </th>
 
 
 </tr>
 
+
 </thead>
+
+
 
 
 
 <tbody>
 
 
+
+{
+
+colleges.length===0 ?
+
+
 <tr>
 
-
-<td colSpan="4" className="no-data">
+<td colSpan="4">
 
 No colleges found
 
 </td>
 
+</tr>
+
+
+:
+
+
+colleges.map((college,index)=>(
+
+
+<tr key={college._id}>
+
+
+<td>
+{index+1}
+</td>
+
+
+
+<td>
+{college.name}
+</td>
+
+
+
+<td>
+{college.createdBy}
+</td>
+
+
+
+
+<td>
+
+
+<button className="edit-btn">
+
+Edit
+
+</button>
+
+
+
+<button
+
+className="delete-btn"
+
+onClick={()=>deleteCollege(college._id)}
+
+>
+
+Delete
+
+</button>
+
+
+
+</td>
+
+
 
 </tr>
+
+
+
+))
+
+
+}
+
 
 
 </tbody>
@@ -192,17 +378,8 @@ No colleges found
 
 
 
-
-<p className="entry-text">
-
-Showing 1 to 1 of 1 entry
-
-</p>
-
-
-
-
 </div>
+
 
 
 
