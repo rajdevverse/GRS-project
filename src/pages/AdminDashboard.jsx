@@ -1,121 +1,348 @@
-import "../styles/admin-dashboard.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+import DashboardCard from "../components/DashboardCard";
+import RecentComplaints from "../components/RecentComplaints";
 
 
-function AdminDashboard(){
 
-const stats = [
+const AdminDashboard = () => {
+
+
+
+const [stats,setStats] = useState({
+
+    totalComplaints:0,
+
+    pending:0,
+
+    inProgress:0,
+
+    resolved:0,
+
+    totalUsers:0,
+
+    categoryStats:[]
+
+});
+
+
+
+const [loading,setLoading] = useState(true);
+
+
+
+
+
+
+useEffect(()=>{
+
+
+fetchDashboard();
+
+
+},[]);
+
+
+
+
+
+
+
+const fetchDashboard = async()=>{
+
+
+try{
+
+
+const token = localStorage.getItem("adminToken");
+
+
+
+const res = await axios.get(
+
+"http://localhost:5000/api/admin/stats",
 
 {
-title:"TOTAL USERS",
-count:"120",
-icon:"bi-people",
-color:"blue"
-},
 
+headers:{
 
-{
-title:"TOTAL COMPLAINTS",
-count:"85",
-icon:"bi-file-earmark-text",
-color:"red"
-},
+Authorization:`Bearer ${token}`
 
-
-{
-title:"PENDING",
-count:"25",
-icon:"bi-clock-history",
-color:"yellow"
-},
-
-
-{
-title:"CLOSED",
-count:"50",
-icon:"bi-check-circle",
-color:"green"
-},
-
-
-{
-title:"BLOCKED USERS",
-count:"10",
-icon:"bi-person-x",
-color:"purple"
-},
-
-
-{
-title:"TOTAL COLLEGES",
-count:"8",
-icon:"bi-building",
-color:"pink"
 }
 
-];
+}
+
+);
+
+
+
+
+
+setStats(res.data);
+
+
+
+}
+catch(error){
+
+
+console.log(
+
+"Dashboard Error:",
+
+error.response?.data || error.message
+
+);
+
+
+
+}
+finally{
+
+
+setLoading(false);
+
+
+}
+
+
+
+};
+
+
+
+
+
 
 
 
 return(
 
-<div className="dashboard">
 
 
-<h1>
-Dashboard Overview
-</h1>
-
-
-<p className="subtitle">
-
-Welcome back, Administrator. Here's what's happening today.
-
-</p>
+<div className="container-fluid py-4">
 
 
 
 
-<div className="dashboard-cards">
+
+{/* HEADER */}
 
 
-{
-
-stats.map((item,index)=>(
+<div className="mb-4">
 
 
-<div 
-className="stat-card"
-key={index}
->
+<h2 className="fw-bold text-dark">
 
-
-<div className={`icon-box ${item.color}`}>
-
-<i className={`bi ${item.icon}`}></i>
-
-</div>
-
-
-
-<div>
-
-
-<h2>
-
-{item.count}
+Dashboard
 
 </h2>
 
 
-<p>
+<p className="text-muted">
 
-{item.title}
+Welcome back, Administrator 👋
 
 </p>
 
 
 </div>
 
+
+
+
+
+
+
+
+
+{/* DASHBOARD CARDS */}
+
+
+
+<div className="row g-4">
+
+
+
+
+
+<div className="col-xl-3 col-md-6">
+
+<DashboardCard
+
+title="Total Complaints"
+
+value={loading ? "..." : stats.totalComplaints}
+
+icon="bi bi-file-earmark-text"
+
+color="#2563eb"
+
+/>
+
+</div>
+
+
+
+
+
+
+
+<div className="col-xl-3 col-md-6">
+
+<DashboardCard
+
+title="Pending"
+
+value={loading ? "..." : stats.pending}
+
+icon="bi bi-hourglass-split"
+
+color="#f59e0b"
+
+/>
+
+</div>
+
+
+
+
+
+
+
+<div className="col-xl-3 col-md-6">
+
+<DashboardCard
+
+title="In Progress"
+
+value={loading ? "..." : stats.inProgress}
+
+icon="bi bi-arrow-repeat"
+
+color="#8b5cf6"
+
+/>
+
+</div>
+
+
+
+
+
+
+
+<div className="col-xl-3 col-md-6">
+
+<DashboardCard
+
+title="Resolved"
+
+value={loading ? "..." : stats.resolved}
+
+icon="bi bi-check-circle"
+
+color="#10b981"
+
+/>
+
+</div>
+
+
+
+
+
+
+
+<div className="col-xl-3 col-md-6">
+
+<DashboardCard
+
+title="Registered Users"
+
+value={loading ? "..." : stats.totalUsers}
+
+icon="bi bi-people"
+
+color="#ec4899"
+
+/>
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* CATEGORY SUMMARY */}
+
+
+
+<div className="card shadow-sm mt-5">
+
+
+<div className="card-body">
+
+
+<h4 className="fw-bold mb-4">
+
+Complaint Categories
+
+</h4>
+
+
+
+
+
+<div className="row">
+
+
+
+{
+
+stats.categoryStats?.length > 0 ?
+
+
+stats.categoryStats.map((item,index)=>(
+
+
+<div
+
+className="col-md-3 mb-3"
+
+key={index}
+
+>
+
+
+<div className="border rounded p-3">
+
+
+<h6 className="text-muted">
+
+{item._id || "Other"}
+
+</h6>
+
+
+<h3 className="fw-bold">
+
+{item.count}
+
+</h3>
+
+
+</div>
 
 
 </div>
@@ -124,6 +351,16 @@ key={index}
 ))
 
 
+:
+
+<div className="text-muted">
+
+No category data available
+
+</div>
+
+
+
 }
 
 
@@ -132,13 +369,45 @@ key={index}
 
 
 
+</div>
+
 
 </div>
 
 
-)
 
-}
+
+
+
+
+
+
+{/* RECENT COMPLAINTS */}
+
+
+
+<div className="mt-5">
+
+
+<RecentComplaints/>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+);
+
+
+};
+
 
 
 export default AdminDashboard;

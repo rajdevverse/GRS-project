@@ -4,12 +4,17 @@ const router = express.Router();
 const College = require("../models/College");
 
 
+// ==========================
 // GET ALL COLLEGES
+// ==========================
+
 router.get("/", async(req,res)=>{
 
     try{
 
-        const colleges = await College.find();
+        const colleges = await College.find().sort({
+            createdAt:-1
+        });
 
         res.json(colleges);
 
@@ -27,7 +32,11 @@ router.get("/", async(req,res)=>{
 
 
 
+
+// ==========================
 // ADD COLLEGE
+// ==========================
+
 router.post("/", async(req,res)=>{
 
     try{
@@ -42,9 +51,12 @@ router.post("/", async(req,res)=>{
         await college.save();
 
 
-        res.json({
-            message:"College Added",
+        res.status(201).json({
+
+            message:"College Added Successfully",
+
             college
+
         });
 
 
@@ -62,19 +74,51 @@ router.post("/", async(req,res)=>{
 
 
 
-// DELETE COLLEGE
 
-router.delete("/:id", async(req,res)=>{
+// ==========================
+// UPDATE COLLEGE
+// ==========================
+
+router.put("/:id", async(req,res)=>{
 
     try{
 
-        await College.findByIdAndDelete(
-            req.params.id
+        const college = await College.findByIdAndUpdate(
+
+            req.params.id,
+
+            {
+
+                name:req.body.name
+
+            },
+
+            {
+
+                new:true
+
+            }
+
         );
 
 
+        if(!college){
+
+            return res.status(404).json({
+
+                message:"College not found"
+
+            });
+
+        }
+
+
         res.json({
-            message:"College Deleted"
+
+            message:"College Updated Successfully",
+
+            college
+
         });
 
 
@@ -83,7 +127,113 @@ router.delete("/:id", async(req,res)=>{
         console.log(error);
 
         res.status(500).json({
+
             message:"Server Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+// ==========================
+// BLOCK / UNBLOCK COLLEGE
+// ==========================
+
+router.put("/:id/block", async(req,res)=>{
+
+    try{
+
+        const college = await College.findById(req.params.id);
+
+        if(!college){
+
+            return res.status(404).json({
+
+                message:"College not found"
+
+            });
+
+        }
+
+
+        college.blocked = !college.blocked;
+
+        await college.save();
+
+
+        res.json({
+
+            message:college.blocked
+                ? "College Blocked Successfully"
+                : "College Unblocked Successfully",
+
+            college
+
+        });
+
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:"Server Error"
+
+        });
+
+    }
+
+});
+
+
+
+
+// ==========================
+// DELETE COLLEGE
+// ==========================
+
+router.delete("/:id", async(req,res)=>{
+
+    try{
+
+        const college = await College.findByIdAndDelete(
+
+            req.params.id
+
+        );
+
+
+        if(!college){
+
+            return res.status(404).json({
+
+                message:"College not found"
+
+            });
+
+        }
+
+
+        res.json({
+
+            message:"College Deleted Successfully"
+
+        });
+
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:"Server Error"
+
         });
 
     }

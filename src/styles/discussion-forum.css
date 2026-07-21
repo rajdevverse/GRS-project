@@ -1,38 +1,65 @@
+/* =====================================
+   STUDENT DISCUSSION FORUM
+===================================== */
+
+
+/* MAIN PAGE */
+
 .discussion-page{
 
-padding:30px;
+    min-height:100vh;
 
-background:#f4f6fa;
+    width:100%;
 
-min-height:100%;
+    padding:45px;
+
+    background:#f8fafc;
 
 }
 
 
+
+
+
+/* MAIN CARD */
 
 .discussion-card{
 
-background:white;
+    width:100%;
 
-border-radius:18px;
+    max-width:1150px;
 
-padding:25px;
+    margin:auto;
 
-box-shadow:0 5px 20px rgba(0,0,0,.05);
+    background:white;
+
+    padding:40px;
+
+    border-radius:22px;
+
+    box-shadow:
+    0 15px 35px rgba(15,23,42,0.08);
 
 }
 
+
+
+
+
+
+
+/* =====================================
+   HEADER
+===================================== */
 
 
 .discussion-header{
 
-display:flex;
+    margin-bottom:35px;
 
-justify-content:space-between;
+    padding-bottom:25px;
 
-align-items:center;
-
-margin-bottom:25px;
+    border-bottom:1px solid #e2e8f0;
 
 }
 
@@ -40,125 +67,536 @@ margin-bottom:25px;
 
 .discussion-header h2{
 
-font-size:24px;
+    display:flex;
 
-font-weight:700;
+    align-items:center;
 
-color:#0f172a;
+    gap:12px;
 
-}
+    font-size:34px;
 
+    font-weight:800;
 
+    color:#0f172a;
 
-.discussion-controls{
-
-display:flex;
-
-gap:15px;
+    margin:0;
 
 }
 
 
 
-.discussion-controls input,
-.discussion-controls select{
+.discussion-header h2 i{
 
-padding:10px 15px;
+    color:#2563eb;
 
-border:1px solid #ddd;
-
-border-radius:8px;
+    font-size:36px;
 
 }
 
 
 
-table{
+.discussion-header p{
 
-width:100%;
+    margin-top:10px;
 
-border-collapse:collapse;
+    color:#64748b;
 
-}
-
-
-
-th{
-
-background:#f8fafc;
-
-padding:14px;
-
-text-align:left;
+    font-size:16px;
 
 }
 
 
 
-td{
-
-padding:14px;
-
-border-bottom:1px solid #eee;
-
-}
 
 
 
-.delete-question{
 
-background:#dc2626;
+/* =====================================
+   POST QUESTION SECTION
+===================================== */
 
-color:white;
 
-border:none;
+.post-box{
 
-padding:8px 15px;
+    background:#f8fafc;
 
-border-radius:7px;
+    padding:30px;
 
-cursor:pointer;
+    border-radius:18px;
+
+    border:1px solid #e2e8f0;
+
+    margin-bottom:35px;
 
 }
 
 
 
-.discussion-footer{
+.post-box h3{
 
-margin-top:20px;
+    font-size:22px;
 
-display:flex;
+    font-weight:700;
 
-justify-content:space-between;
+    color:#0f172a;
 
-align-items:center;
-
-color:#64748b;
+    margin-bottom:18px;
 
 }
 
 
 
-.discussion-footer button{
+.post-box textarea{
 
-padding:8px 12px;
+    width:100%;
 
-margin-left:5px;
+    min-height:130px;
 
-border:1px solid #ddd;
+    padding:18px;
 
-background:white;
+    resize:none;
 
-border-radius:5px;
+    border-radius:14px;
+
+    border:1px solid #cbd5e1;
+
+    outline:none;
+
+    font-size:16px;
+
+    background:white;
+
+    transition:.3s;
 
 }
 
 
 
-.discussion-footer .active{
+.post-box textarea:focus{
 
-background:#2563eb;
+    border-color:#2563eb;
 
-color:white;
+    box-shadow:
+
+    0 0 0 4px rgba(37,99,235,.15);
+
+}
+
+
+
+
+
+
+
+.post-btn{
+
+    margin-top:18px;
+
+    padding:13px 35px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+
+
+.post-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+
+
+.post-btn:disabled{
+
+    opacity:.7;
+
+    cursor:not-allowed;
+
+}
+
+
+
+
+
+
+
+/* =====================================
+   SEARCH
+===================================== */
+
+
+.search-area{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.search-area i{
+
+    font-size:20px;
+
+    color:#64748b;
+
+}
+
+
+
+.search-box{
+
+    flex:1;
+
+    padding:15px 20px;
+
+    border-radius:12px;
+
+    border:1px solid #cbd5e1;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+
+
+
+.search-box:focus{
+
+    border-color:#2563eb;
+
+}
+
+
+
+
+
+
+
+/* =====================================
+   DISCUSSION CARDS
+===================================== */
+
+
+.discussion-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:22px;
+
+}
+
+
+
+
+
+
+
+.discussion-item{
+
+    background:white;
+
+    padding:28px;
+
+    border-radius:18px;
+
+    border:1px solid #e2e8f0;
+
+    transition:.3s;
+
+}
+
+
+
+
+
+.discussion-item:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:
+
+    0 12px 30px rgba(0,0,0,.08);
+
+}
+
+
+
+
+
+
+
+/* QUESTION TITLE */
+
+
+.question-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+
+
+.question-header h4{
+
+    font-size:21px;
+
+    font-weight:700;
+
+    color:#0f172a;
+
+    margin:0;
+
+    line-height:1.5;
+
+}
+
+
+
+
+
+.question-header span{
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+    padding:6px 14px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    white-space:nowrap;
+
+}
+
+
+
+
+
+
+
+/* DETAILS */
+
+
+.discussion-info{
+
+    margin-top:20px;
+
+    padding-top:15px;
+
+    border-top:1px solid #e2e8f0;
+
+}
+
+
+
+.discussion-info p{
+
+    margin:10px 0;
+
+    color:#64748b;
+
+    font-size:15px;
+
+}
+
+
+
+.discussion-info i{
+
+    color:#2563eb;
+
+    margin-right:10px;
+
+}
+
+
+
+.discussion-info b{
+
+    color:#0f172a;
+
+}
+
+
+
+
+
+
+
+/* VIEW BUTTON */
+
+
+.reply-btn{
+
+    margin-top:18px;
+
+    padding:11px 25px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#0f172a;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+
+
+.reply-btn:hover{
+
+    background:#1e293b;
+
+}
+
+
+
+
+
+
+
+/* =====================================
+   EMPTY STATE
+===================================== */
+
+
+.empty-box{
+
+    padding:60px;
+
+    text-align:center;
+
+    color:#64748b;
+
+}
+
+
+
+.empty-box i{
+
+    font-size:50px;
+
+    color:#94a3b8;
+
+}
+
+
+
+
+
+.empty-box p{
+
+    margin-top:15px;
+
+    font-size:18px;
+
+}
+
+
+
+
+
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+
+@media(max-width:768px){
+
+
+.discussion-page{
+
+    padding:20px;
+
+}
+
+
+
+.discussion-card{
+
+    padding:25px;
+
+}
+
+
+
+.discussion-header h2{
+
+    font-size:26px;
+
+}
+
+
+
+.question-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+
+
+.search-area{
+
+    flex-direction:column;
+
+}
+
+
+
+.search-box{
+
+    width:100%;
+
+}
+
 
 }

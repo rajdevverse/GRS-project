@@ -1,18 +1,23 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 
 const Complaint = require("../models/Complaint");
 
 
 
 
+// =======================
 // Submit Complaint
-router.post("/", async (req, res)=>{
+// =======================
+
+router.post("/", async(req,res)=>{
 
     try{
 
 
         const count = await Complaint.countDocuments();
+
 
 
         const complaint = new Complaint({
@@ -63,13 +68,24 @@ router.post("/", async (req, res)=>{
 
 
 
-// Get all complaints (Admin)
+// =======================
+// Get All Complaints (Admin)
+// =======================
+
 router.get("/", async(req,res)=>{
 
     try{
 
 
         const complaints = await Complaint.find()
+
+        .populate(
+
+            "userId",
+
+            "name email mobile college"
+
+        )
 
         .sort({
 
@@ -105,7 +121,96 @@ router.get("/", async(req,res)=>{
 
 
 
-// Get complaints of a specific user
+// =======================
+// User Complaint Statistics
+// =======================
+
+router.get("/stats/:userId", async(req,res)=>{
+
+    try{
+
+
+        if(!mongoose.Types.ObjectId.isValid(req.params.userId)){
+
+
+            return res.status(400).json({
+
+                message:"Invalid User ID"
+
+            });
+
+
+        }
+
+
+
+        const complaints = await Complaint.find({
+
+            userId:req.params.userId
+
+        });
+
+
+
+        res.json({
+
+
+            total:complaints.length,
+
+
+            pending:complaints.filter(
+
+                c=>c.status==="Pending"
+
+            ).length,
+
+
+
+            resolved:complaints.filter(
+
+                c=>c.status==="Resolved"
+
+            ).length,
+
+
+
+            inProgress:complaints.filter(
+
+                c=>c.status==="In Progress"
+
+            ).length
+
+
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+
+    }
+
+});
+
+
+
+
+
+
+
+// =======================
+// Get User Complaints
+// =======================
+
 router.get("/:userId", async(req,res)=>{
 
     try{
@@ -151,7 +256,10 @@ router.get("/:userId", async(req,res)=>{
 
 
 
-// Update complaint status (Admin)
+// =======================
+// Update Complaint Status
+// =======================
+
 router.put("/:id", async(req,res)=>{
 
     try{
@@ -179,11 +287,13 @@ router.put("/:id", async(req,res)=>{
 
         if(!complaint){
 
+
             return res.status(404).json({
 
                 message:"Complaint not found"
 
             });
+
 
         }
 
@@ -206,6 +316,7 @@ router.put("/:id", async(req,res)=>{
         console.log(error);
 
 
+
         res.status(500).json({
 
             message:error.message
@@ -216,6 +327,7 @@ router.put("/:id", async(req,res)=>{
     }
 
 });
+
 
 
 

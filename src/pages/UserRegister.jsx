@@ -1,143 +1,190 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import UniversityLogo from "../components/UniversityLogo";
+import "../styles/Auth.css";
 
 
 function UserRegister(){
 
-const [formData,setFormData] = useState({
-    name:"",
-    email:"",
-    mobile:"",
-    password:""
-});
+    const navigate = useNavigate();
 
 
-const handleChange=(e)=>{
+    const [user,setUser] = useState({
 
-    setFormData({
-        ...formData,
-        [e.target.name]:e.target.value
+        name:"",
+        email:"",
+        password:""
+
     });
 
-};
+
+
+    const handleChange=(e)=>{
+
+        setUser({
+
+            ...user,
+
+            [e.target.name]:e.target.value
+
+        });
+
+    };
 
 
 
-const handleSubmit=async(e)=>{
-
-    e.preventDefault();
 
 
-    try{
+    const handleRegister=async(e)=>{
 
-        const response = await fetch(
-            "http://localhost:5000/api/users/register",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
+        e.preventDefault();
 
-                body:JSON.stringify(formData)
+
+        try{
+
+            const response = await fetch(
+                "http://localhost:5000/api/users/register",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+
+                    body:JSON.stringify(user)
+
+                }
+            );
+
+
+            const data = await response.json();
+
+
+            if(response.ok){
+
+                alert("Registration Successful");
+
+                navigate("/user-login");
+
             }
-        );
+            else{
+
+                alert(
+                    data.message || "Registration failed"
+                );
+
+            }
 
 
-        const data = await response.json();
+        }
+        catch(error){
+
+            console.log("Register Error:", error);
+
+            alert("Server error");
+
+        }
 
 
-        alert(data.message);
-
-
-    }
-    catch(error){
-
-        console.log(error);
-        alert("Server error");
-
-    }
-
-};
-
-
-
-return(
-
-<div className="auth-page">
-
-
-<div className="auth-card">
-
-
-<h2>User Registration</h2>
-
-
-<form onSubmit={handleSubmit}>
-
-
-<input
-type="text"
-name="name"
-placeholder="Full Name"
-value={formData.name}
-onChange={handleChange}
-/>
+    };
 
 
 
-<input
-type="email"
-name="email"
-placeholder="Email"
-value={formData.email}
-onChange={handleChange}
-/>
+
+
+    return(
+
+        <div className="auth-page">
+
+
+            <div className="auth-card">
+
+
+                <UniversityLogo size={100}/>
+
+
+                <h2>
+                    Student Registration
+                </h2>
+
+
+                <p className="auth-subtitle">
+                    Create your grievance portal account
+                </p>
 
 
 
-<input
-type="text"
-name="mobile"
-placeholder="Mobile Number"
-value={formData.mobile}
-onChange={handleChange}
-/>
+
+                <form onSubmit={handleRegister}>
+
+
+                    <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter your name"
+                    value={user.name}
+                    onChange={handleChange}
+                    required
+                    />
 
 
 
-<input
-type="password"
-name="password"
-placeholder="Password"
-value={formData.password}
-onChange={handleChange}
-/>
+                    <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    value={user.email}
+                    onChange={handleChange}
+                    required
+                    />
 
 
 
-<button type="submit">
-Register
-</button>
+                    <input
+                    type="password"
+                    name="password"
+                    placeholder="Create password"
+                    value={user.password}
+                    onChange={handleChange}
+                    required
+                    />
 
 
-</form>
+
+                    <button type="submit">
+                        Register Account
+                    </button>
 
 
-<p>
-Already registered?
-<Link to="/user-login">
- Login
-</Link>
-</p>
+
+                </form>
 
 
-</div>
 
 
-</div>
+
+                <p className="auth-link">
+
+                    Already registered?
+
+                    <span
+                    onClick={()=>navigate("/user-login")}
+                    >
+
+                    Login here
+
+                    </span>
+
+                </p>
 
 
-)
+
+            </div>
+
+
+        </div>
+
+    );
 
 }
 

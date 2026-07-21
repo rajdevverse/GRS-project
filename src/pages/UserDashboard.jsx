@@ -1,137 +1,61 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/dashboard.css";
+import { Link } from "react-router-dom";
+import "../styles/UserDashboard.css";
 
 
 function UserDashboard(){
 
-const navigate = useNavigate();
-
-
-const user = JSON.parse(
-    localStorage.getItem("user")
-);
-
-
-const [complaints,setComplaints] = useState([]);
-
-
-
-const logout = ()=>{
-
-    localStorage.removeItem("user");
-
-    navigate("/user-login");
-
-};
-
-
-
+const [user,setUser] = useState(null);
 
 
 useEffect(()=>{
 
-
-const fetchComplaints = async()=>{
-
-
-try{
-
-
-const response = await fetch(
-
-`http://localhost:5000/api/complaints/${user.id}`
-
+const loggedUser = JSON.parse(
+localStorage.getItem("user")
 );
 
-
-const data = await response.json();
-
-
-console.log("Dashboard Complaints:",data);
-
-
-setComplaints(data);
-
-
-}
-
-catch(error){
-
-console.log(error);
-
-}
-
-
-};
-
-
-
-if(user?.id){
-
-fetchComplaints();
-
-}
+setUser(loggedUser);
 
 
 },[]);
 
 
 
-
-
-
-const total = complaints.length;
-
-
-const pending = complaints.filter(
-
-(c)=>c.status==="Pending"
-
-).length;
-
-
-
-const progress = complaints.filter(
-
-(c)=>c.status==="In Progress"
-
-).length;
-
-
-
-const resolved = complaints.filter(
-
-(c)=>c.status==="Resolved"
-
-).length;
-
-
-
-
-
-
-
 return(
 
-
-<div className="dashboard-page">
-
+<div className="dashboard">
 
 
-{/* HEADER */}
 
 <div className="dashboard-header">
 
-
 <h1>
-LNMU Grievance Portal
+Welcome, {user?.name || "Student"} 👋
 </h1>
 
 
 <p>
-Student Dashboard
+LNMU Grievance Redressal Portal
 </p>
+
+</div>
+
+
+
+
+
+<div className="user-info-card">
+
+
+<div>
+
+<i className="bi bi-envelope"></i>
+
+<p>
+{user?.email}
+</p>
+
+</div>
 
 
 </div>
@@ -140,17 +64,18 @@ Student Dashboard
 
 
 
-{/* STAT CARDS */}
 
 
-<div className="stats-container">
+<div className="dashboard-cards">
 
 
 
-<div className="stats-card">
+<div className="dashboard-card">
 
-<div className="stats-icon">
-📄
+<div className="card-icon blue">
+
+<i className="bi bi-file-earmark-text"></i>
+
 </div>
 
 <h3>
@@ -158,105 +83,93 @@ Total Complaints
 </h3>
 
 <h2>
-{total}
+1
 </h2>
 
+
 </div>
 
 
 
 
 
-<div className="stats-card">
 
-<div className="stats-icon">
-🟡
+<div className="dashboard-card">
+
+
+<div className="card-icon orange">
+
+<i className="bi bi-clock"></i>
+
 </div>
+
 
 <h3>
 Pending
 </h3>
 
+
 <h2>
-{pending}
+1
 </h2>
 
+
 </div>
 
 
 
 
 
-<div className="stats-card">
 
-<div className="stats-icon">
-🔵
+<div className="dashboard-card">
+
+
+<div className="card-icon purple">
+
+<i className="bi bi-arrow-repeat"></i>
+
 </div>
+
 
 <h3>
 In Progress
 </h3>
 
+
 <h2>
-{progress}
+0
 </h2>
 
+
 </div>
 
 
 
 
 
-<div className="stats-card">
 
-<div className="stats-icon">
-🟢
+<div className="dashboard-card">
+
+
+<div className="card-icon green">
+
+<i className="bi bi-check-circle"></i>
+
 </div>
+
 
 <h3>
 Resolved
 </h3>
 
-<h2>
-{resolved}
-</h2>
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-{/* ACTION CARDS */}
-
-
-<div className="quick-container">
-
-
-
-<div
-
-className="action-card"
-
-onClick={()=>navigate("/submit-complaint")}
-
->
-
 
 <h2>
-➕ Submit Complaint
+0
 </h2>
 
 
-<p>
-Register a new grievance and send it to administration.
-</p>
+</div>
+
 
 
 </div>
@@ -266,155 +179,106 @@ Register a new grievance and send it to administration.
 
 
 
-<div
 
-className="action-card"
 
-onClick={()=>navigate("/my-complaints")}
 
->
+<div className="quick-actions">
 
 
 <h2>
-📋 My Complaints
-</h2>
-
-
-<p>
-Track your complaints and check their status.
-</p>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-{/* RECENT COMPLAINTS */}
-
-
-
-<div className="recent-box">
-
-
-<h2>
-Recent Complaints
+Quick Actions
 </h2>
 
 
 
-{
-
-complaints.length===0 ?
-
-
-<p>
-No complaints submitted yet.
-</p>
-
-
-:
-
-
-complaints.slice(0,3).map((complaint)=>(
+<div className="action-grid">
 
 
 
-<div
-
-className="complaint-row"
-
-key={complaint._id}
-
->
+<Link to="/submit-complaint">
 
 
+<div className="action-card">
 
-<div>
+
+<i className="bi bi-pencil-square"></i>
 
 
 <h3>
-{complaint.title}
+Submit Complaint
 </h3>
 
 
 <p>
-{complaint.category}
+Register a new grievance
 </p>
 
 
 </div>
 
 
+</Link>
 
-<div>
+
+
+
+
+
+
+<Link to="/my-complaints">
+
+
+<div className="action-card">
+
+
+<i className="bi bi-folder"></i>
+
+
+<h3>
+My Complaints
+</h3>
 
 
 <p>
-<b>
-Complaint No:
-</b>
-
-{" "}
-
-{complaint.complaintId || "Generating"}
-
+Track complaint status
 </p>
 
+
+</div>
+
+
+</Link>
+
+
+
+
+
+
+
+<Link to="/profile">
+
+
+<div className="action-card">
+
+
+<i className="bi bi-person-circle"></i>
+
+
+<h3>
+Profile
+</h3>
 
 
 <p>
-<b>
-Status:
-</b>
-
-{" "}
-
-{complaint.status}
-
+Manage your account
 </p>
 
 
 </div>
 
 
+</Link>
 
-</div>
-
-
-
-))
-
-
-}
-
-
-
-</div>
-
-
-
-
-
-
-<button
-
-className="logout-btn"
-
-onClick={logout}
-
->
-
-Logout
-
-</button>
 
 
 
@@ -422,7 +286,17 @@ Logout
 </div>
 
 
-)
+</div>
+
+
+
+
+
+</div>
+
+
+);
+
 
 }
 

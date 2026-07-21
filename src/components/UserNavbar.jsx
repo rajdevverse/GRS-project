@@ -1,66 +1,86 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./UserNavbar.css";
 
+function UserNavbar() {
 
-function UserNavbar(){
+  const navigate = useNavigate();
 
-const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
+  const [time, setTime] = useState("");
 
-const user = JSON.parse(
-localStorage.getItem("user")
-);
+  useEffect(() => {
 
+    const updateClock = () => {
 
+      const now = new Date();
 
-const logout=()=>{
+      setTime(
+        now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        })
+      );
 
-localStorage.removeItem("user");
+    };
 
-navigate("/user-login");
+    updateClock();
 
-};
+    const interval = setInterval(updateClock, 1000);
 
+    return () => clearInterval(interval);
 
+  }, []);
 
-return(
+  const logout = () => {
 
-<div className="user-navbar">
+    localStorage.removeItem("user");
 
+    navigate("/user-login");
 
-<div>
+  };
 
-<h2>
-LNMU Grievance Portal
-</h2>
+  return (
 
-</div>
+    <div className="user-navbar">
 
+      <div className="navbar-left">
 
+        <button className="menu-btn">
+          <i className="bi bi-list"></i>
+        </button>
 
-<div className="navbar-user">
+        <h3>
+          Good Afternoon, {user?.name || "Student"} 👋
+        </h3>
 
+      </div>
 
-<span>
-👤 {user?.name || "Student"}
-</span>
+      <div className="navbar-right">
 
+        <span className="clock">
+          {time}
+        </span>
 
+        <div className="profile-circle">
+          <i className="bi bi-person-fill"></i>
+        </div>
 
-<button onClick={logout}>
-Logout
-</button>
+        <button
+          className="logout-btn"
+          onClick={logout}
+        >
+          Logout
+        </button>
 
+      </div>
 
-</div>
+    </div>
 
-
-
-</div>
-
-)
+  );
 
 }
-
 
 export default UserNavbar;

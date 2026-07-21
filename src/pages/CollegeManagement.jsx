@@ -1,172 +1,231 @@
+
+
+
+
 import { useEffect, useState } from "react";
-import "../styles/college-management.css";
+import axios from "axios";
+import "./CollegeManagement.css";
 
 
-function CollegeManagement(){
+function CollegeManagement() {
 
 
-const [collegeName,setCollegeName] = useState("");
+    const [colleges, setColleges] = useState([]);
 
-const [colleges,setColleges] = useState([]);
+    const [name, setName] = useState("");
 
+    const [editId, setEditId] = useState(null);
 
+    const [editName, setEditName] = useState("");
 
 
 
-// GET COLLEGES
 
-const fetchColleges = async()=>{
+    const API = "http://localhost:5000/api/admin/college";
 
 
-try{
 
 
-const res = await fetch(
-"http://localhost:5000/api/admin/college"
-);
+    // GET COLLEGES
 
+    const fetchColleges = async()=>{
 
-const data = await res.json();
+        try{
 
+            const res = await axios.get(API);
 
-setColleges(data);
+            setColleges(res.data);
 
+        }
+        catch(error){
 
-}
+            console.log(error);
 
-catch(error){
+        }
 
-console.log(error);
+    };
 
-}
 
 
-};
 
+    useEffect(()=>{
 
+        fetchColleges();
 
+    },[]);
 
 
 
 
-useEffect(()=>{
 
-fetchColleges();
 
-},[]);
 
+    // ADD COLLEGE
 
+    const addCollege = async()=>{
 
 
+        if(!name.trim()){
 
+            alert("Enter college name");
 
+            return;
 
+        }
 
-// ADD COLLEGE
 
+        try{
 
-const addCollege = async()=>{
 
+            await axios.post(API,{
 
-if(!collegeName){
+                name
 
-alert("Enter college name");
+            });
 
-return;
 
-}
+            setName("");
 
+            fetchColleges();
 
 
-try{
+        }
+        catch(error){
 
+            alert(
+                error.response?.data?.message ||
+                "Error adding college"
+            );
 
-await fetch(
-"http://localhost:5000/api/admin/college",
-{
+        }
 
-method:"POST",
 
-headers:{
+    };
 
-"Content-Type":"application/json"
 
-},
 
 
-body:JSON.stringify({
 
-name:collegeName
 
-})
 
 
-}
 
-);
+    // UPDATE COLLEGE
 
 
+    const updateCollege = async(id)=>{
 
-setCollegeName("");
 
-fetchColleges();
+        try{
 
 
+            await axios.put(
+                `${API}/${id}`,
+                {
+                    name:editName
+                }
+            );
 
-}
 
-catch(error){
+            setEditId(null);
 
-console.log(error);
+            setEditName("");
 
-}
+            fetchColleges();
 
 
-};
+        }
+        catch(error){
 
+            console.log(error);
 
+        }
 
 
+    };
 
 
 
 
-// DELETE COLLEGE
 
 
-const deleteCollege = async(id)=>{
 
 
-try{
 
+    // BLOCK COLLEGE
 
-await fetch(
 
-`http://localhost:5000/api/admin/college/${id}`,
+    const blockCollege = async(id)=>{
 
-{
 
-method:"DELETE"
+        try{
 
-}
 
-);
+            await axios.put(
+                `${API}/${id}/block`
+            );
 
 
+            fetchColleges();
 
-fetchColleges();
 
+        }
+        catch(error){
 
-}
+            console.log(error);
 
-catch(error){
+        }
 
-console.log(error);
 
-}
+    };
 
 
-};
+
+
+
+
+
+
+
+    // DELETE COLLEGE
+
+
+    const deleteCollege = async(id)=>{
+
+
+        const confirmDelete =
+        window.confirm(
+            "Delete this college?"
+        );
+
+
+        if(!confirmDelete)
+        return;
+
+
+
+        try{
+
+
+            await axios.delete(
+                `${API}/${id}`
+            );
+
+
+            fetchColleges();
+
+
+        }
+        catch(error){
+
+            console.log(error);
+
+        }
+
+
+    };
+
+
 
 
 
@@ -176,50 +235,44 @@ console.log(error);
 
 return(
 
-
 <div className="college-page">
 
 
-
-
-
-{/* ADD COLLEGE CARD */}
-
-
-<div className="college-card">
-
-
 <h2>
-Add New College
+College Management
 </h2>
 
 
 
-<label>
-College Name
-</label>
+
+
+<div className="college-add-box">
 
 
 <input
 
-value={collegeName}
+type="text"
 
-onChange={(e)=>setCollegeName(e.target.value)}
+placeholder="Enter College Name"
 
-placeholder="Enter college name"
+value={name}
+
+onChange={(e)=>setName(e.target.value)}
 
 />
 
 
-
 <button
+
 onClick={addCollege}
+
+className="btn-add"
+
 >
 
-Save College
+Add College
 
 </button>
-
 
 
 </div>
@@ -231,19 +284,7 @@ Save College
 
 
 
-
-{/* TABLE */}
-
-
-<div className="college-card">
-
-
-<h2>
-Registered Colleges
-</h2>
-
-
-
+<div className="college-table-box">
 
 
 <table>
@@ -254,27 +295,26 @@ Registered Colleges
 <tr>
 
 <th>
-S NO.
+College Name
 </th>
 
 
 <th>
-COLLEGE NAME
+Created By
 </th>
 
 
 <th>
-CREATED BY
+Status
 </th>
 
 
 <th>
-ACTION
+Actions
 </th>
 
 
 </tr>
-
 
 </thead>
 
@@ -285,47 +325,52 @@ ACTION
 <tbody>
 
 
-
 {
 
-colleges.length===0 ?
-
-
-<tr>
-
-<td colSpan="4">
-
-No colleges found
-
-</td>
-
-</tr>
-
-
-:
-
-
-colleges.map((college,index)=>(
+colleges.map((college)=>(
 
 
 <tr key={college._id}>
 
 
 <td>
-{index+1}
+
+
+{
+
+editId === college._id ?
+
+<input
+
+value={editName}
+
+onChange={(e)=>
+setEditName(e.target.value)
+}
+
+/>
+
+
+:
+
+college.name
+
+
+}
+
+
 </td>
 
 
 
-<td>
-{college.name}
-</td>
-
 
 
 <td>
+
 {college.createdBy}
+
 </td>
+
 
 
 
@@ -333,19 +378,142 @@ colleges.map((college,index)=>(
 <td>
 
 
-<button className="edit-btn">
+<span
+
+className={
+college.blocked
+?
+"status blocked"
+:
+"status active"
+}
+
+>
+
+{
+
+college.blocked
+?
+"Blocked"
+:
+"Active"
+
+}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<div className="action-buttons">
+
+
+
+{
+
+editId === college._id ?
+
+
+<button
+
+className="btn-save"
+
+onClick={()=>
+updateCollege(college._id)
+}
+
+>
+
+Save
+
+</button>
+
+
+:
+
+
+<button
+
+className="btn-edit"
+
+onClick={()=>{
+
+setEditId(college._id);
+
+setEditName(college.name);
+
+}}
+
+>
 
 Edit
 
 </button>
 
 
+}
+
+
+
+
+
+
+
 
 <button
 
-className="delete-btn"
+className={
+college.blocked
+?
+"btn-unblock"
+:
+"btn-block"
+}
 
-onClick={()=>deleteCollege(college._id)}
+onClick={()=>
+blockCollege(college._id)
+}
+
+>
+
+
+{
+
+college.blocked
+?
+"Unblock"
+:
+"Block"
+
+}
+
+
+</button>
+
+
+
+
+
+
+
+<button
+
+className="btn-delete"
+
+onClick={()=>
+deleteCollege(college._id)
+}
 
 >
 
@@ -355,12 +523,15 @@ Delete
 
 
 
+
+</div>
+
+
 </td>
 
 
 
 </tr>
-
 
 
 ))
@@ -369,27 +540,23 @@ Delete
 }
 
 
-
 </tbody>
-
 
 
 </table>
 
 
-
 </div>
-
-
-
 
 
 </div>
 
 
-)
+);
+
 
 }
+
 
 
 export default CollegeManagement;

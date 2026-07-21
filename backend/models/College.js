@@ -15,6 +15,12 @@ const collegeSchema = new mongoose.Schema(
         type: String,
         default: "Admin",
         trim: true
+    },
+
+
+    blocked: {
+        type: Boolean,
+        default: false
     }
 
 },
@@ -23,7 +29,6 @@ const collegeSchema = new mongoose.Schema(
 }
 
 );
-
 
 
 module.exports = mongoose.model(

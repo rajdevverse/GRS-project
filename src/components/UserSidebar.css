@@ -1,110 +1,185 @@
 .user-sidebar{
 
-width:250px;
-
-height:100vh;
-
 position:fixed;
 
 left:0;
 
 top:0;
 
-background:#0f172a;
+width:270px;
 
-color:white;
+height:100vh;
 
-padding:25px;
-
-}
-
-
-.sidebar-logo{
-
-text-align:center;
-
-margin-bottom:40px;
-
-}
-
-
-.sidebar-logo h2{
-
-font-size:28px;
-
-margin:5px;
-
-}
-
-
-.sidebar-logo p{
-
-color:#94a3b8;
-
-font-size:14px;
-
-}
-
-
-
-
-.sidebar-menu{
+background:linear-gradient(180deg,#102a43,#1e3a5f,#173753);
 
 display:flex;
 
 flex-direction:column;
 
-gap:15px;
+color:white;
+
+overflow:hidden;
 
 }
 
+.sidebar-top{
 
+display:flex;
 
-.sidebar-menu button{
+align-items:center;
 
+gap:15px;
 
-background:transparent;
+padding:25px;
 
-border:none;
+border-bottom:1px solid rgba(255,255,255,.1);
+
+}
+
+.logo-box{
+
+width:50px;
+
+height:50px;
+
+border-radius:12px;
+
+background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:24px;
+
+}
+
+.sidebar-top h2{
+
+margin:0;
+
+font-size:20px;
+
+font-weight:700;
+
+}
+
+.sidebar-top p{
+
+margin:3px 0 0;
+
+font-size:13px;
+
+color:#cbd5e1;
+
+}
+
+.menu-section{
+
+padding:18px 0;
+
+}
+
+.menu-title{
+
+display:block;
+
+padding:0 25px 10px;
+
+font-size:12px;
+
+font-weight:700;
+
+letter-spacing:1px;
+
+color:#94a3b8;
+
+}
+
+.menu-item{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+padding:13px 25px;
+
+color:#e2e8f0;
+
+text-decoration:none;
+
+transition:.3s;
+
+font-size:16px;
+
+}
+
+.menu-item:hover{
+
+background:#1d4ed8;
 
 color:white;
 
-text-align:left;
+}
 
-padding:14px;
+.menu-item.active{
 
-font-size:15px;
+background:#2563eb;
+
+border-left:4px solid #38bdf8;
+
+color:white;
+
+}
+
+.sidebar-bottom{
+
+margin-top:auto;
+
+padding:20px;
+
+}
+
+.logout-btn{
+
+width:100%;
+
+border:none;
+
+padding:13px;
 
 border-radius:10px;
 
+background:#ef4444;
+
+color:white;
+
+font-size:16px;
+
+font-weight:600;
+
 cursor:pointer;
 
-}
+display:flex;
 
+justify-content:center;
 
+align-items:center;
 
-.sidebar-menu button:hover{
+gap:10px;
 
-background:#1e3a8a;
-
-}
-
-
-
-.logout-menu{
-
-margin-top:40px;
-
-}
-.user-main{
-
-margin-left:250px;
+transition:.3s;
 
 }
 
+.logout-btn:hover{
 
-.page-content{
+background:#dc2626;
 
-padding-top:0;
+transform:translateY(-2px);
 
 }

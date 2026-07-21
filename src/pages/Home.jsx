@@ -1,156 +1,213 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "../styles/Home.css";
 import UniversityLogo from "../components/UniversityLogo";
-import PortalFooter from "../components/PortalFooter";
 
 
 function Home(){
 
-return(
+    const navigate = useNavigate();
 
-<div>
 
-<UniversityLogo />
+    return(
 
+        <div className="home-page">
 
-<div className="home-container">
 
+            {/* HEADER */}
 
-<h1>
-Grievance Redressal System
-</h1>
+            <header className="portal-header">
 
 
-<p>
-Lalit Narayan Mithila University
-</p>
+                <UniversityLogo/>
 
 
+                <h2>
+                    Lalit Narayan Mithila University
+                </h2>
 
-<div className="portal-cards">
 
+                <p>
+                    Darbhanga, Bihar
+                </p>
 
 
-{/* USER LOGIN */}
 
-<div className="portal-card">
+            </header>
 
-<div className="icon-badge icon-badge-navy mx-auto mb-3">
 
-<i className="bi bi-person-circle"></i>
 
-</div>
 
 
-<h2>
-User Login
-</h2>
+            {/* TITLE */}
 
 
-<p>
-Already registered users can login and track complaints.
-</p>
+            <section className="hero">
 
 
-<Link to="/user-login">
+                <h1>
+                    Grievance Redressal Portal
+                </h1>
 
-<button>
-Login
-</button>
 
-</Link>
+                <p>
+                    A digital platform for students to submit complaints,
+                    track status and get transparent resolutions.
+                </p>
 
 
-</div>
+            </section>
 
 
 
 
 
-{/* USER REGISTER */}
 
-<div className="portal-card">
 
+            {/* LOGIN CARDS */}
 
-<div className="icon-badge icon-badge-gray mx-auto mb-3">
 
-<i className="bi bi-person-plus"></i>
+            <section className="portal-cards">
 
-</div>
 
 
+                <div 
+                className="portal-card admin"
+                onClick={()=>navigate("/admin-login")}
+                >
 
-<h2>
-User Registration
-</h2>
 
+                    <div className="card-icon">
+                        🔐
+                    </div>
 
-<p>
-New users can create an account and submit complaints.
-</p>
 
+                    <h3>
+                        Admin Login
+                    </h3>
 
-<Link to="/user-register">
 
-<button>
-Register
-</button>
+                    <p>
+                        Manage complaints, users and grievance resolutions.
+                    </p>
 
-</Link>
 
+                    <button>
+                        Login →
+                    </button>
 
-</div>
 
+                </div>
 
 
 
 
-{/* ADMIN LOGIN */}
 
-<div className="portal-card">
 
 
-<div className="icon-badge icon-badge-navy mx-auto mb-3">
 
-<i className="bi bi-shield-lock"></i>
+                <div 
+                className="portal-card register"
+                onClick={()=>navigate("/user-register")}
+                >
 
-</div>
 
+                    <div className="card-icon">
+                        📝
+                    </div>
 
-<h2>
-Admin Login
-</h2>
 
+                    <h3>
+                        User Registration
+                    </h3>
 
-<p>
-Authorized administrators can manage grievances.
-</p>
 
+                    <p>
+                        Register yourself and submit grievances easily.
+                    </p>
 
-<Link to="/admin-login">
 
-<button>
-Login
-</button>
+                    <button>
+                        Register →
+                    </button>
 
-</Link>
 
+                </div>
 
-</div>
 
 
 
-</div>
 
 
-</div>
 
 
-<PortalFooter />
+                <div 
+                className="portal-card user"
+                onClick={()=>navigate("/user-login")}
+                >
 
 
-</div>
+                    <div className="card-icon">
+                        👨‍🎓
+                    </div>
 
-)
+
+                    <h3>
+                        User Login
+                    </h3>
+
+
+                    <p>
+                        Login to submit and track your complaints.
+                    </p>
+
+
+                    <button>
+                        Login →
+                    </button>
+
+
+                </div>
+
+
+
+            </section>
+
+
+
+
+
+
+
+
+
+            {/* FOOTER */}
+
+
+            <footer className="portal-footer">
+
+
+                <p>
+                    All Rights Reserved © 2025-2026
+                </p>
+
+
+                <p>
+                    Designed and Developed by Kirtiraj Singh
+                </p>
+
+
+
+            </footer>
+
+
+
+
+
+
+        </div>
+
+
+    );
 
 }
 

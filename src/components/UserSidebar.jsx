@@ -1,91 +1,141 @@
-import { useNavigate } from "react-router-dom";
+
+import { NavLink, useNavigate } from "react-router-dom";
 import "./UserSidebar.css";
 
+function UserSidebar() {
 
-function UserSidebar(){
+  const navigate = useNavigate();
 
-const navigate = useNavigate();
+  const logout = () => {
 
+    localStorage.removeItem("user");
 
-const logout = ()=>{
+    navigate("/user-login");
 
-localStorage.removeItem("user");
+  };
 
-navigate("/user-login");
+  return (
 
-};
+    <div className="user-sidebar">
 
+      {/* Logo */}
 
+      <div className="sidebar-top">
 
-return(
+        <div className="logo-box">
 
-<div className="user-sidebar">
+          <i className="bi bi-mortarboard-fill"></i>
 
+        </div>
 
-<div className="sidebar-logo">
+        <div>
 
-🎓
+          <h2>LNM University</h2>
 
-<h2>
-LNMU
-</h2>
+          <p>Student Portal</p>
 
-<p>
-Grievance Portal
-</p>
+        </div>
 
-</div>
+      </div>
 
+      {/* MAIN */}
 
+      <div className="menu-section">
 
+        <span className="menu-title">MAIN</span>
 
-<div className="sidebar-menu">
+        <NavLink
+          to="/user-dashboard"
+          className="menu-item"
+        >
+          <i className="bi bi-speedometer2"></i>
+          Dashboard
+        </NavLink>
 
+      </div>
 
-<button onClick={()=>navigate("/user-dashboard")}>
+      {/* COMPLAINTS */}
 
-🏠 Dashboard
+      <div className="menu-section">
 
-</button>
+        <span className="menu-title">COMPLAINTS</span>
 
+        <NavLink
+          to="/submit-complaint"
+          className="menu-item"
+        >
+          <i className="bi bi-plus-circle"></i>
+          Add Complaint
+        </NavLink>
 
+        <NavLink
+          to="/my-complaints"
+          className="menu-item"
+        >
+          <i className="bi bi-card-list"></i>
+          My Complaints
+        </NavLink>
 
-<button onClick={()=>navigate("/submit-complaint")}>
+      </div>
 
-➕ Submit Complaint
+      {/* COMMUNITY */}
 
-</button>
+      <div className="menu-section">
 
+        <span className="menu-title">COMMUNITY</span>
 
+        <NavLink
+          to="/discussion-forum"
+          className="menu-item"
+        >
+          <i className="bi bi-chat-dots"></i>
+          Discussion Forum
+        </NavLink>
 
-<button onClick={()=>navigate("/my-complaints")}>
+      </div>
 
-📋 My Complaints
+      {/* ACCOUNT */}
 
-</button>
+      <div className="menu-section">
 
+        <span className="menu-title">ACCOUNT</span>
 
+        <NavLink
+          to="/update-profile"
+          className="menu-item"
+        >
+          <i className="bi bi-person"></i>
+          Update Profile
+        </NavLink>
 
-<button 
-className="logout-menu"
-onClick={logout}
->
+        <NavLink
+          to="/change-password"
+          className="menu-item"
+        >
+          <i className="bi bi-lock"></i>
+          Change Password
+        </NavLink>
 
-🚪 Logout
+      </div>
 
-</button>
+      {/* Logout */}
 
+      <div className="sidebar-bottom">
 
+        <button
+          className="logout-btn"
+          onClick={logout}
+        >
+          <i className="bi bi-box-arrow-right"></i>
+          Logout
+        </button>
 
-</div>
+      </div>
 
+    </div>
 
-
-</div>
-
-)
+  );
 
 }
-
 
 export default UserSidebar;

@@ -1,0 +1,584 @@
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+
+.home-page{
+
+    min-height:100vh;
+
+    background:
+    linear-gradient(
+        135deg,
+        #eef2ff,
+        #f8fafc
+    );
+
+    display:flex;
+
+    flex-direction:column;
+
+    font-family:
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+}
+
+
+
+
+
+
+/* ================= HEADER ================= */
+
+
+.portal-header{
+
+    text-align:center;
+
+    padding:35px 20px;
+
+    background:#ffffff;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,0.08);
+
+}
+
+
+
+
+.university-logo{
+
+    width:130px;
+
+    height:130px;
+
+    object-fit:contain;
+
+    display:block;
+
+    margin:0 auto 18px;
+
+}
+
+
+
+
+
+
+.portal-header h2{
+
+    font-size:32px;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+    letter-spacing:.5px;
+
+}
+
+
+
+.portal-header p{
+
+    margin-top:8px;
+
+    font-size:18px;
+
+    color:#64748b;
+
+}
+
+
+
+
+
+
+
+
+
+/* ================= HERO ================= */
+
+
+
+.hero{
+
+    text-align:center;
+
+    padding:65px 20px 45px;
+
+}
+
+
+
+
+
+.hero h1{
+
+
+    font-size:50px;
+
+    font-weight:900;
+
+    color:#1e3a8a;
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+
+.hero p{
+
+
+    max-width:750px;
+
+    margin:auto;
+
+
+    font-size:18px;
+
+
+    color:#475569;
+
+
+    line-height:1.7;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ================= CARDS ================= */
+
+
+
+.portal-cards{
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:stretch;
+
+
+    gap:35px;
+
+
+    padding:40px 30px 70px;
+
+
+    flex-wrap:wrap;
+
+
+}
+
+
+
+
+
+.portal-card{
+
+
+    width:330px;
+
+
+    min-height:350px;
+
+
+    padding:40px 30px;
+
+
+    border-radius:28px;
+
+
+    text-align:center;
+
+
+    color:white;
+
+
+    cursor:pointer;
+
+
+    transition:.4s ease;
+
+
+    box-shadow:
+
+    0 20px 45px rgba(0,0,0,.18);
+
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+
+}
+
+
+
+
+
+
+
+.portal-card:hover{
+
+
+    transform:
+
+    translateY(-15px)
+    scale(1.04);
+
+
+
+    box-shadow:
+
+    0 30px 60px rgba(0,0,0,.25);
+
+
+}
+
+
+
+
+
+
+
+/* ADMIN CARD */
+
+
+.admin{
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #1e3a8a,
+        #2563eb
+    );
+
+
+}
+
+
+
+
+
+/* REGISTER CARD */
+
+
+.register{
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #059669,
+        #16a34a
+    );
+
+
+}
+
+
+
+
+
+/* USER LOGIN CARD */
+
+
+.user{
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #7c3aed,
+        #9333ea
+    );
+
+
+}
+
+
+
+
+
+
+
+
+.card-icon{
+
+
+    width:95px;
+
+
+    height:95px;
+
+
+    border-radius:50%;
+
+
+
+    background:
+
+    rgba(255,255,255,.18);
+
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+
+    font-size:48px;
+
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+
+
+
+
+.portal-card h3{
+
+
+    font-size:28px;
+
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+
+
+
+.portal-card p{
+
+
+    font-size:16px;
+
+
+    line-height:1.6;
+
+
+    opacity:.95;
+
+
+}
+
+
+
+
+
+
+
+.portal-card button{
+
+
+    margin-top:28px;
+
+
+    padding:13px 38px;
+
+
+
+    border:none;
+
+
+    border-radius:30px;
+
+
+    background:white;
+
+
+    color:#0f172a;
+
+
+
+    font-size:15px;
+
+
+    font-weight:700;
+
+
+
+    cursor:pointer;
+
+
+
+    transition:.3s;
+
+
+
+}
+
+
+
+
+
+.portal-card button:hover{
+
+
+    transform:
+
+    translateY(-4px);
+
+
+
+    box-shadow:
+
+    0 8px 20px rgba(0,0,0,.2);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ================= FOOTER ================= */
+
+
+
+.portal-footer{
+
+
+    margin-top:auto;
+
+
+    background:#0f172a;
+
+
+    color:white;
+
+
+    text-align:center;
+
+
+    padding:25px;
+
+
+    font-size:15px;
+
+
+    line-height:1.8;
+
+
+}
+
+
+
+
+
+
+
+
+/* ================= MOBILE ================= */
+
+
+
+@media(max-width:768px){
+
+
+
+    .hero h1{
+
+
+        font-size:35px;
+
+
+    }
+
+
+
+    .hero p{
+
+
+        font-size:16px;
+
+
+    }
+
+
+
+    .portal-card{
+
+
+        width:90%;
+
+
+    }
+
+
+
+    .portal-header h2{
+
+
+        font-size:24px;
+
+
+    }
+
+
+
+    .university-logo{
+
+
+        width:100px;
+
+
+        height:100px;
+
+
+    }
+
+
+}

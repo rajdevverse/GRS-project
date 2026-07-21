@@ -1,87 +1,323 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import "../styles/admin-complaints.css";
 
 
 function AdminComplaints(){
 
 
-const complaints = [
+const [complaints,setComplaints] = useState([]);
 
-{
-id:1,
-title:"Hostel Water Issue",
-student:"Rahul Sharma",
-category:"Hostel",
-status:"Pending"
-},
+const [search,setSearch] = useState("");
+
+const navigate = useNavigate();
+
+const location = useLocation();
 
 
-{
-id:2,
-title:"Library Timing Problem",
-student:"Amit Kumar",
-category:"Library",
-status:"Closed"
-},
 
 
-{
-id:3,
-title:"Exam Form Issue",
-student:"Neha Singh",
-category:"Exam",
-status:"Not Processed"
+
+
+
+useEffect(()=>{
+
+fetchComplaints();
+
+},[]);
+
+
+
+
+
+
+
+
+// FETCH COMPLAINTS
+
+const fetchComplaints = async()=>{
+
+
+try{
+
+
+const res = await axios.get(
+
+"http://localhost:5000/api/complaints"
+
+);
+
+
+
+setComplaints(res.data);
+
+
+
+}
+catch(error){
+
+
+console.log(
+
+"Fetch Complaint Error:",
+
+error.response?.data || error.message
+
+);
+
+
 }
 
-];
+
+};
+
+
+
+
+
+
+
+
+
+// STATUS UPDATE
+
+const updateStatus = async(id,status)=>{
+
+
+try{
+
+
+await axios.put(
+
+`http://localhost:5000/api/complaints/${id}`,
+
+{
+
+status:status
+
+}
+
+);
+
+
+
+alert(
+"Status Updated"
+);
+
+
+
+fetchComplaints();
+
+
+
+}
+catch(error){
+
+
+console.log(error);
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+// FILTER COMPLAINTS
+
+const filteredComplaints = complaints.filter((item)=>{
+
+
+const searchMatch =
+
+item.title
+?.toLowerCase()
+.includes(
+search.toLowerCase()
+);
+
+
+
+if(!searchMatch)
+
+return false;
+
+
+
+
+
+
+// Pending
+
+if(
+
+location.pathname === "/admin/complaints/pending"
+
+){
+
+return item.status === "Pending";
+
+}
+
+
+
+
+
+
+// Not Processed = In Progress
+
+if(
+
+location.pathname === "/admin/complaints/not-processed"
+
+){
+
+return item.status === "In Progress";
+
+}
+
+
+
+
+
+
+
+// Closed = Resolved
+
+if(
+
+location.pathname === "/admin/complaints/closed"
+
+){
+
+return item.status === "Resolved";
+
+}
+
+
+
+
+
+
+return true;
+
+
+
+});
+
+
+
+
+
+
 
 
 
 return(
 
+
 <div className="complaints-page">
 
 
+
 <div className="complaints-card">
+
+
+
+
 
 
 <div className="complaints-header">
 
 
 <h2>
-All Complaints
+
+
+{
+
+location.pathname === "/admin/complaints/pending"
+
+?
+
+"Pending Complaints"
+
+
+
+:
+
+location.pathname === "/admin/complaints/not-processed"
+
+?
+
+"Not Processed Complaints"
+
+
+
+:
+
+location.pathname === "/admin/complaints/closed"
+
+?
+
+"Closed Complaints"
+
+
+
+:
+
+"All Complaints"
+
+}
+
+
+
 </h2>
 
 
-<div className="table-controls">
 
 
-<select>
 
-<option>
-10
-</option>
-
-<option>
-25
-</option>
-
-<option>
-50
-</option>
-
-</select>
 
 
 <input
+
+
 type="text"
+
+
 placeholder="Search complaints..."
+
+
+value={search}
+
+
+onChange={(e)=>
+
+setSearch(e.target.value)
+
+}
+
+
 />
 
 
+
 </div>
 
 
-</div>
+
+
 
 
 
@@ -92,35 +328,42 @@ placeholder="Search complaints..."
 
 <thead>
 
+
 <tr>
 
+
 <th>
-S NO.
+S.No
 </th>
 
 
 <th>
-STUDENT
+Complaint ID
 </th>
 
 
 <th>
-COMPLAINT
+Student
 </th>
 
 
 <th>
-CATEGORY
+Title
 </th>
 
 
 <th>
-STATUS
+Category
 </th>
 
 
 <th>
-ACTION
+Status
+</th>
+
+
+<th>
+Action
 </th>
 
 
@@ -132,64 +375,109 @@ ACTION
 
 
 
+
+
+
 <tbody>
+
 
 
 {
 
-complaints.map((item,index)=>(
-
-
-<tr key={item.id}>
-
-
-<td>
-{index+1}
-</td>
+filteredComplaints.length === 0 ?
 
 
 
-<td>
-{item.student}
-</td>
+<tr>
 
+<td
 
+colSpan="7"
 
-<td>
-{item.title}
-</td>
+className="text-center"
 
-
-
-<td>
-{item.category}
-</td>
-
-
-
-
-<td>
-
-<span 
-className={
-item.status==="Pending"
-?
-"status pending"
-:
-item.status==="Closed"
-?
-"status closed"
-:
-"status process"
-}
 >
 
-{item.status}
-
-</span>
-
+No Complaints Found
 
 </td>
+
+</tr>
+
+
+
+
+
+:
+
+
+
+filteredComplaints.map((item,index)=>(
+
+
+
+<tr key={item._id}>
+
+
+<td>
+
+{index+1}
+
+</td>
+
+
+
+
+
+<td>
+
+{item.complaintId || "N/A"}
+
+</td>
+
+
+
+
+
+
+<td>
+
+{
+
+item.userId?.name ||
+
+"Student"
+
+}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+{item.title}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+{item.category}
+
+</td>
+
+
+
 
 
 
@@ -197,21 +485,88 @@ item.status==="Closed"
 <td>
 
 
-<button className="view-btn">
+<select
+
+
+value={item.status}
+
+
+onChange={(e)=>
+
+updateStatus(
+
+item._id,
+
+e.target.value
+
+)
+
+}
+
+
+>
+
+
+
+<option>
+Pending
+</option>
+
+
+<option>
+In Progress
+</option>
+
+
+<option>
+Resolved
+</option>
+
+
+<option>
+Rejected
+</option>
+
+
+
+</select>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<button
+
+
+className="view-btn"
+
+
+onClick={()=>navigate(
+
+`/admin/complaint/${item._id}`
+
+)}
+
+
+>
 
 View
 
 </button>
 
 
-<button className="delete-btn">
-
-Delete
-
-</button>
-
 
 </td>
+
+
 
 
 
@@ -228,8 +583,11 @@ Delete
 </tbody>
 
 
-
 </table>
+
+
+
+
 
 
 
@@ -237,52 +595,32 @@ Delete
 
 
 <p>
-Showing 1 to {complaints.length} of {complaints.length} entries
+
+Showing {filteredComplaints.length} complaints
+
 </p>
 
 
 
-<div className="pagination">
-
-<button>
-«
-</button>
-
-<button>
-‹
-</button>
-
-<button className="active-page">
-1
-</button>
-
-<button>
-›
-</button>
-
-<button>
-»
-</button>
-
-
 </div>
+
+
+
+
 
 
 
 </div>
 
 
-
 </div>
 
 
+);
 
-</div>
-
-
-)
 
 }
+
 
 
 export default AdminComplaints;

@@ -1,31 +1,95 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UniversityLogo from "../components/UniversityLogo";
 
 
 function AdminLogin(){
 
+
+const navigate = useNavigate();
+
+
+const [email,setEmail] = useState("");
+const [password,setPassword] = useState("");
+const [error,setError] = useState("");
+
+
+
+const handleLogin = async()=>{
+
+
+try{
+
+
+const res = await fetch(
+"http://localhost:5000/api/admin/login",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+email,
+password
+})
+}
+);
+
+
+
+const data = await res.json();
+
+
+
+if(!res.ok){
+
+setError(data.message);
+
+return;
+
+}
+
+
+
+localStorage.setItem(
+"admin",
+JSON.stringify(data.admin)
+);
+
+
+
+navigate("/admin-dashboard");
+
+
+
+}
+catch(err){
+
+console.log(err);
+
+setError("Backend not connected");
+
+}
+
+
+
+};
+
+
+
+
+
 return(
 
 <div className="container-fluid">
 
-
 <div className="row min-vh-100">
 
-
-
-{/* LEFT SIDE */}
 
 <div className="col-md-6 admin-bg text-white d-flex align-items-center">
 
 
 <div className="p-5">
-
-
-<div className="admin-icon-box mb-4">
-
-<i className="bi bi-shield-lock"></i>
-
-</div>
-
 
 
 <h1>
@@ -38,82 +102,11 @@ Grievance Management System
 </h3>
 
 
-<p className="mt-3">
-
-Authorized administrators can manage complaints,
-review grievances, and update resolution status.
-
+<p>
+Authorized administrators can manage complaints and grievances.
 </p>
 
 
-
-
-<div className="mt-4">
-
-
-<div className="d-flex align-items-center mb-3">
-
-
-<div className="feature-icon-badge me-3">
-
-<i className="bi bi-speedometer2"></i>
-
-</div>
-
-
-<span>
-Manage complaints dashboard
-</span>
-
-
-</div>
-
-
-
-
-<div className="d-flex align-items-center mb-3">
-
-
-<div className="feature-icon-badge me-3">
-
-<i className="bi bi-people"></i>
-
-</div>
-
-
-<span>
-Manage student grievances
-</span>
-
-
-</div>
-
-
-
-
-<div className="d-flex align-items-center">
-
-
-<div className="feature-icon-badge me-3">
-
-<i className="bi bi-check-circle"></i>
-
-</div>
-
-
-<span>
-Resolve complaints efficiently
-</span>
-
-
-</div>
-
-
-
-</div>
-
-
-
 </div>
 
 
@@ -121,10 +114,6 @@ Resolve complaints efficiently
 
 
 
-
-
-
-{/* RIGHT SIDE */}
 
 
 <div className="col-md-6 d-flex align-items-center justify-content-center">
@@ -133,33 +122,12 @@ Resolve complaints efficiently
 <div className="auth-card">
 
 
-<UniversityLogo />
+<UniversityLogo/>
 
 
-
-<div className="admin-icon-box mx-auto mt-4 mb-3">
-
-<i className="bi bi-shield-lock"></i>
-
-</div>
-
-
-
-<h2 className="text-center">
-
+<h2 className="text-center mt-4">
 Admin Login
-
 </h2>
-
-
-
-
-<span className="badge-restricted d-block text-center my-3">
-
-RESTRICTED ACCESS
-
-</span>
-
 
 
 
@@ -170,7 +138,12 @@ type="email"
 
 placeholder="Admin Email"
 
+value={email}
+
+onChange={(e)=>setEmail(e.target.value)}
+
 />
+
 
 
 
@@ -181,12 +154,24 @@ type="password"
 
 placeholder="Password"
 
+value={password}
+
+onChange={(e)=>setPassword(e.target.value)}
+
 />
 
 
 
 
-<button className="btn-admin-gradient w-100 py-2">
+
+
+<button
+
+className="btn-admin-gradient w-100"
+
+onClick={handleLogin}
+
+>
 
 Login
 
@@ -195,12 +180,20 @@ Login
 
 
 
-<p className="text-center mt-3 text-muted">
 
-Only authorized administrators can access this portal.
+{
+error &&
+
+<p className="text-danger text-center mt-3">
+
+{error}
 
 </p>
 
+}
+
+
+
 
 
 </div>
@@ -209,14 +202,14 @@ Only authorized administrators can access this portal.
 </div>
 
 
-
 </div>
 
 
 </div>
 
 
-)
+);
+
 
 }
 
