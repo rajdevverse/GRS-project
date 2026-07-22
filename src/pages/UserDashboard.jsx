@@ -1,44 +1,158 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import DashboardCard from "../components/DashboardCard";
 import "../styles/UserDashboard.css";
 
 
 function UserDashboard(){
 
+
+const navigate = useNavigate();
+
+
+
 const [user,setUser] = useState(null);
+
+
+
+const [stats,setStats] = useState({
+
+    total:0,
+
+    pending:0,
+
+    inProgress:0,
+
+    resolved:0
+
+});
+
+
+
+const [loading,setLoading] = useState(true);
+
+
+
+
 
 
 useEffect(()=>{
 
+
 const loggedUser = JSON.parse(
+
 localStorage.getItem("user")
+
 );
 
+
+
 setUser(loggedUser);
+
+
+
+if(loggedUser?.id){
+
+fetchStats(loggedUser.id);
+
+}
 
 
 },[]);
 
 
 
+
+
+
+
+const fetchStats = async(id)=>{
+
+
+try{
+
+
+const res = await axios.get(
+
+`http://localhost:5000/api/complaints/stats/${id}`
+
+);
+
+
+
+setStats(res.data);
+
+
+
+}
+
+catch(error){
+
+
+console.log(
+
+"Stats Error:",
+
+error
+
+);
+
+
+}
+
+finally{
+
+
+setLoading(false);
+
+
+}
+
+
+};
+
+
+
+
+
+
+
+
+
 return(
+
 
 <div className="dashboard">
 
 
 
+
+
+
 <div className="dashboard-header">
 
+
 <h1>
+
 Welcome, {user?.name || "Student"} 👋
+
 </h1>
 
 
 <p>
+
 LNMU Grievance Redressal Portal
+
 </p>
 
+
 </div>
+
+
+
+
 
 
 
@@ -49,42 +163,18 @@ LNMU Grievance Redressal Portal
 
 <div>
 
+
 <i className="bi bi-envelope"></i>
 
+
 <p>
+
 {user?.email}
+
 </p>
 
-</div>
-
 
 </div>
-
-
-
-
-
-
-
-<div className="dashboard-cards">
-
-
-
-<div className="dashboard-card">
-
-<div className="card-icon blue">
-
-<i className="bi bi-file-earmark-text"></i>
-
-</div>
-
-<h3>
-Total Complaints
-</h3>
-
-<h2>
-1
-</h2>
 
 
 </div>
@@ -94,51 +184,37 @@ Total Complaints
 
 
 
-<div className="dashboard-card">
 
 
-<div className="card-icon orange">
 
-<i className="bi bi-clock"></i>
-
-</div>
+{/* COMPLAINT CARDS */}
 
 
-<h3>
-Pending
-</h3>
 
-
-<h2>
-1
-</h2>
-
-
-</div>
+<div className="row g-4">
 
 
 
 
 
-
-<div className="dashboard-card">
-
-
-<div className="card-icon purple">
-
-<i className="bi bi-arrow-repeat"></i>
-
-</div>
+<div className="col-xl-3 col-md-6 col-sm-12">
 
 
-<h3>
-In Progress
-</h3>
+<DashboardCard
 
+title="Total Complaints"
 
-<h2>
-0
-</h2>
+value={
+loading ? "..." : stats.total
+}
+
+icon="bi bi-file-earmark-text"
+
+color="#2563eb"
+
+onClick={()=>navigate("/my-complaints")}
+
+/>
 
 
 </div>
@@ -148,28 +224,25 @@ In Progress
 
 
 
-<div className="dashboard-card">
+
+<div className="col-xl-3 col-md-6 col-sm-12">
 
 
-<div className="card-icon green">
+<DashboardCard
 
-<i className="bi bi-check-circle"></i>
+title="Pending"
 
-</div>
+value={
+loading ? "..." : stats.pending
+}
 
+icon="bi bi-clock"
 
-<h3>
-Resolved
-</h3>
+color="#f59e0b"
 
+onClick={()=>navigate("/my-complaints?status=Pending")}
 
-<h2>
-0
-</h2>
-
-
-</div>
-
+/>
 
 
 </div>
@@ -179,6 +252,73 @@ Resolved
 
 
 
+
+<div className="col-xl-3 col-md-6 col-sm-12">
+
+
+<DashboardCard
+
+title="In Progress"
+
+value={
+loading ? "..." : stats.inProgress
+}
+
+icon="bi bi-arrow-repeat"
+
+color="#8b5cf6"
+
+onClick={()=>navigate("/my-complaints?status=In Progress")}
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div className="col-xl-3 col-md-6 col-sm-12">
+
+
+<DashboardCard
+
+title="Resolved"
+
+value={
+loading ? "..." : stats.resolved
+}
+
+icon="bi bi-check-circle"
+
+color="#10b981"
+
+onClick={()=>navigate("/my-complaints?status=Resolved")}
+
+/>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* QUICK ACTIONS */}
 
 
 
@@ -186,12 +326,19 @@ Resolved
 
 
 <h2>
+
 Quick Actions
+
 </h2>
 
 
 
+
+
 <div className="action-grid">
+
+
+
 
 
 
@@ -205,12 +352,16 @@ Quick Actions
 
 
 <h3>
+
 Submit Complaint
+
 </h3>
 
 
 <p>
+
 Register a new grievance
+
 </p>
 
 
@@ -218,6 +369,7 @@ Register a new grievance
 
 
 </Link>
+
 
 
 
@@ -235,12 +387,16 @@ Register a new grievance
 
 
 <h3>
+
 My Complaints
+
 </h3>
 
 
 <p>
+
 Track complaint status
+
 </p>
 
 
@@ -248,6 +404,7 @@ Track complaint status
 
 
 </Link>
+
 
 
 
@@ -265,12 +422,16 @@ Track complaint status
 
 
 <h3>
+
 Profile
+
 </h3>
 
 
 <p>
+
 Manage your account
+
 </p>
 
 
@@ -283,10 +444,13 @@ Manage your account
 
 
 
+
+
 </div>
 
 
 </div>
+
 
 
 

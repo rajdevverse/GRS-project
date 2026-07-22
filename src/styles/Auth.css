@@ -1,4 +1,4 @@
-.auth-page{
+.auth-page {
 
     min-height:100vh;
 
@@ -8,12 +8,13 @@
 
     align-items:center;
 
+    padding:40px 20px;
 
     background:
 
     linear-gradient(
         135deg,
-        #eef2ff,
+        #eff6ff,
         #f8fafc
     );
 
@@ -21,102 +22,188 @@
 
 
 
-.auth-card{
+/* Registration Card */
 
+.register-card {
 
-    width:420px;
-
-    padding:40px;
-
+    width:900px;
 
     background:white;
 
+    padding:45px;
 
     border-radius:25px;
 
-
-    text-align:center;
-
-
     box-shadow:
 
-    0 20px 50px rgba(0,0,0,.15);
+    0 25px 60px rgba(15,23,42,.15);
 
+    animation:fadeIn .5s ease;
 
 }
 
 
 
 
-.auth-card .university-logo{
+
+@keyframes fadeIn {
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+
+
+/* Logo */
+
+
+.register-card .university-logo {
 
     margin:auto;
 
+    display:block;
+
 }
 
 
 
 
-.auth-card h2{
+/* Heading */
 
+
+.register-card h2 {
+
+    text-align:center;
 
     margin-top:20px;
 
-
     color:#1e3a8a;
 
+    font-size:32px;
 
-    font-size:30px;
-
+    font-weight:800;
 
 }
 
 
 
+.auth-subtitle {
 
-
-.auth-subtitle{
-
+    text-align:center;
 
     color:#64748b;
 
-    margin-bottom:30px;
+    margin-bottom:35px;
+
+    font-size:16px;
 
 }
 
 
 
 
+/* Form */
 
-.auth-card form{
 
+.register-form {
 
     display:flex;
 
     flex-direction:column;
 
-    gap:18px;
-
+    gap:20px;
 
 }
 
 
 
 
+/* Section Titles */
 
-.auth-card input{
+
+.section-title {
+
+    font-size:20px;
+
+    color:#1e40af;
+
+    margin-top:20px;
+
+    padding-bottom:8px;
+
+    border-bottom:
+
+    2px solid #dbeafe;
+
+}
 
 
-    padding:15px 18px;
+
+
+/* Two Column Grid */
+
+
+.form-grid {
+
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(2,1fr);
+
+
+    gap:18px;
+
+}
+
+
+
+
+/* Inputs */
+
+
+.register-form input,
+
+.register-form select,
+
+.register-form textarea {
+
+
+    width:100%;
+
+
+    padding:14px 16px;
 
 
     border-radius:12px;
 
 
-    border:1px solid #cbd5e1;
+    border:
+
+    1px solid #cbd5e1;
 
 
-    font-size:16px;
+    font-size:15px;
+
+
+    background:#f8fafc;
 
 
     outline:none;
@@ -125,13 +212,48 @@
     transition:.3s;
 
 
+    font-family:inherit;
+
 }
 
 
 
 
 
-.auth-card input:focus{
+.register-form textarea {
+
+
+    resize:none;
+
+
+}
+
+
+
+
+.register-form input:hover,
+
+.register-form select:hover,
+
+.register-form textarea:hover {
+
+
+    border-color:#94a3b8;
+
+}
+
+
+
+
+
+.register-form input:focus,
+
+.register-form select:focus,
+
+.register-form textarea:focus {
+
+
+    background:white;
 
 
     border-color:#2563eb;
@@ -139,7 +261,7 @@
 
     box-shadow:
 
-    0 0 0 3px rgba(37,99,235,.15);
+    0 0 0 4px rgba(37,99,235,.12);
 
 
 }
@@ -147,21 +269,37 @@
 
 
 
+/* Select */
 
 
-.auth-card button{
+.register-form select {
 
 
-    margin-top:10px;
+    cursor:pointer;
+
+    color:#475569;
+
+}
 
 
-    padding:15px;
+
+
+/* Button */
+
+
+.register-btn {
+
+
+    margin-top:25px;
+
+
+    padding:16px;
 
 
     border:none;
 
 
-    border-radius:30px;
+    border-radius:35px;
 
 
     background:
@@ -176,13 +314,18 @@
     color:white;
 
 
-    font-size:17px;
+    font-size:18px;
 
 
     font-weight:700;
 
 
     cursor:pointer;
+
+
+    box-shadow:
+
+    0 10px 25px rgba(37,99,235,.3);
 
 
     transition:.3s;
@@ -194,10 +337,15 @@
 
 
 
-.auth-card button:hover{
+.register-btn:hover {
 
 
     transform:translateY(-3px);
+
+
+    box-shadow:
+
+    0 15px 35px rgba(37,99,235,.4);
 
 
 }
@@ -206,11 +354,26 @@
 
 
 
-.auth-link{
+.register-btn:active {
 
 
-    margin-top:25px;
+    transform:scale(.98);
 
+}
+
+
+
+
+
+/* Login Link */
+
+
+.auth-link {
+
+
+    text-align:center;
+
+    margin-top:30px;
 
     color:#64748b;
 
@@ -219,37 +382,67 @@
 
 
 
-
-
-.auth-link span{
+.auth-link span {
 
 
     color:#2563eb;
 
-
     font-weight:700;
 
+    margin-left:6px;
 
     cursor:pointer;
 
 
-    margin-left:5px;
+}
 
+
+
+.auth-link span:hover {
+
+
+    text-decoration:underline;
 
 }
 
 
 
-@media(max-width:500px){
 
 
-.auth-card{
+/* Mobile */
 
-width:90%;
 
-padding:30px;
+@media(max-width:768px){
 
-}
+
+    .register-card {
+
+
+        width:100%;
+
+        padding:30px 20px;
+
+
+    }
+
+
+
+    .form-grid {
+
+
+        grid-template-columns:1fr;
+
+
+    }
+
+
+
+    .register-card h2 {
+
+
+        font-size:26px;
+
+    }
 
 
 }

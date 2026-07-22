@@ -5,382 +5,573 @@ import axios from "axios";
 
 function AdminComplaintDetails(){
 
-    const { id } = useParams();
 
-    const navigate = useNavigate();
+const {id}=useParams();
 
+const navigate=useNavigate();
 
-    const [complaint,setComplaint] = useState(null);
 
-    const [status,setStatus] = useState("");
 
-    const [remark,setRemark] = useState("");
+const [complaint,setComplaint]=useState(null);
 
+const [status,setStatus]=useState("");
 
+const [remark,setRemark]=useState("");
 
+const [loading,setLoading]=useState(true);
 
 
-    useEffect(()=>{
 
-        fetchComplaint();
 
-    },[]);
 
 
+useEffect(()=>{
 
+fetchComplaint();
 
+},[]);
 
 
-    const fetchComplaint = async()=>{
 
 
-        try{
 
 
-            const res = await axios.get(
 
-                `http://localhost:5000/api/complaints/${id}`
+const fetchComplaint=async()=>{
 
-            );
 
+try{
 
-            setComplaint(res.data);
 
-            setStatus(
-                res.data.status
-            );
+const token=localStorage.getItem("adminToken");
 
-            setRemark(
-                res.data.adminRemark || ""
-            );
 
+const res=await axios.get(
 
-        }
-        catch(error){
+`http://localhost:5000/api/complaints/${id}`,
 
+{
 
-            console.log(
+headers:{
 
-                "Fetch Complaint Error:",
-                error
+Authorization:`Bearer ${token}`
 
-            );
+}
 
+}
 
-        }
+);
 
 
-    };
 
+setComplaint(res.data);
 
 
+setStatus(res.data.status);
 
 
+setRemark(
 
+res.data.adminRemark || ""
 
-    const updateComplaint = async()=>{
+);
 
 
-        try{
 
+}
 
-            await axios.put(
 
-                `http://localhost:5000/api/complaints/${id}`,
+catch(error){
 
-                {
 
-                    status:status,
+console.log(
 
-                    adminRemark:remark
+"Fetch Complaint Error",
 
-                }
+error
 
-            );
+);
 
 
+}
 
-            alert(
-                "Complaint Updated Successfully"
-            );
 
+finally{
 
 
-            fetchComplaint();
+setLoading(false);
 
 
+}
 
-        }
-        catch(error){
 
+};
 
-            console.log(
 
-                "Update Error:",
-                error
 
-            );
 
 
-        }
 
 
-    };
 
+const updateComplaint=async()=>{
 
 
+try{
 
 
+const token=localStorage.getItem("adminToken");
 
 
-    if(!complaint){
 
+await axios.put(
 
-        return(
+`http://localhost:5000/api/complaints/${id}`,
 
-            <h3 className="p-4">
+{
 
-                Loading Complaint...
+status,
 
-            </h3>
+adminRemark:remark
 
-        );
+},
 
-    }
+{
 
+headers:{
 
+Authorization:`Bearer ${token}`
 
+}
 
+}
 
+);
 
 
-    return(
 
 
-        <div className="container-fluid py-4">
+alert(
 
+"Complaint Updated Successfully"
 
+);
 
-            <button
 
-            className="btn btn-secondary mb-3"
 
-            onClick={()=>navigate("/admin-complaints")}
+fetchComplaint();
 
-            >
 
-                ← Back
 
-            </button>
+}
 
+catch(error){
 
 
+console.log(
 
+"Update Error",
 
-            <h2 className="fw-bold">
+error
 
-                Complaint Details
+);
 
-            </h2>
 
+}
 
 
+};
 
 
-            <div className="card shadow-sm mt-4">
 
 
-                <div className="card-body">
 
 
 
-                    <h5>
-                        Complaint ID
-                    </h5>
+if(loading){
 
-                    <p>
-                        {complaint.complaintId}
-                    </p>
 
+return(
 
+<h3 className="p-4">
 
+Loading Complaint...
 
+</h3>
 
-                    <h5>
-                        Student
-                    </h5>
+);
 
-                    <p>
-                        {
-                        complaint.userId?.name ||
-                        "Unknown"
-                        }
-                    </p>
 
+}
 
 
 
 
-                    <h5>
-                        Email
-                    </h5>
 
-                    <p>
-                        {
-                        complaint.userId?.email ||
-                        "N/A"
-                        }
-                    </p>
 
 
+if(!complaint){
 
 
+return(
 
-                    <h5>
-                        Title
-                    </h5>
+<h3 className="p-4">
 
-                    <p>
-                        {complaint.title}
-                    </p>
+Complaint Not Found
 
+</h3>
 
+);
 
+}
 
 
-                    <h5>
-                        Category
-                    </h5>
 
-                    <p>
-                        {complaint.category}
-                    </p>
 
 
 
+return(
 
 
-                    <h5>
-                        Description
-                    </h5>
 
-                    <p>
-                        {complaint.description}
-                    </p>
+<div className="container-fluid py-4">
 
 
 
 
 
-                    <hr/>
+<button
 
+className="btn btn-secondary mb-3"
 
+onClick={()=>navigate("/admin/complaints")}
 
+>
 
+← Back To Complaints
 
-                    <h5>
-                        Update Status
-                    </h5>
+</button>
 
 
 
-                    <select
 
-                    className="form-select"
 
-                    value={status}
 
-                    onChange={(e)=>
-                        setStatus(e.target.value)
-                    }
 
-                    >
+<h2 className="fw-bold">
 
+Complaint Details
 
-                        <option>
-                            Pending
-                        </option>
+</h2>
 
 
-                        <option>
-                            In Progress
-                        </option>
 
 
-                        <option>
-                            Resolved
-                        </option>
 
 
-                        <option>
-                            Rejected
-                        </option>
 
+<div className="card shadow-sm mt-4">
 
-                    </select>
 
+<div className="card-body">
 
 
 
 
 
+<div className="row">
 
-                    <h5 className="mt-3">
 
-                        Admin Remark
 
-                    </h5>
+<div className="col-md-6">
 
 
+<h6 className="text-muted">
 
+Complaint ID
 
+</h6>
 
-                    <textarea
 
-                    className="form-control"
+<p className="fw-bold">
 
-                    rows="4"
+{complaint.complaintId || "N/A"}
 
-                    value={remark}
+</p>
 
-                    onChange={(e)=>
-                        setRemark(e.target.value)
-                    }
 
-                    />
+</div>
 
 
 
 
 
 
+<div className="col-md-6">
 
-                    <button
 
-                    className="btn btn-primary mt-4"
+<h6 className="text-muted">
 
-                    onClick={updateComplaint}
+Status
 
-                    >
+</h6>
 
-                        Update Complaint
 
-                    </button>
+<span className="badge bg-warning">
 
+{complaint.status}
 
+</span>
 
 
-                </div>
+</div>
 
 
-            </div>
 
 
 
-        </div>
+</div>
 
 
-    );
+
+
+
+
+
+
+<hr/>
+
+
+
+
+
+
+<h5>
+
+Student
+
+</h5>
+
+
+<p>
+
+{complaint.userId?.name || "Unknown"}
+
+</p>
+
+
+
+
+
+<h5>
+
+Email
+
+</h5>
+
+
+<p>
+
+{complaint.userId?.email || "N/A"}
+
+</p>
+
+
+
+
+
+
+
+<h5>
+
+Title
+
+</h5>
+
+
+<p>
+
+{complaint.title}
+
+</p>
+
+
+
+
+
+
+<h5>
+
+Category
+
+</h5>
+
+
+<p>
+
+{complaint.category}
+
+</p>
+
+
+
+
+
+
+<h5>
+
+Description
+
+</h5>
+
+
+<p>
+
+{complaint.description}
+
+</p>
+
+
+
+
+
+
+
+
+<hr/>
+
+
+
+
+
+
+
+<h5>
+
+Update Status
+
+</h5>
+
+
+
+
+
+<select
+
+className="form-select"
+
+value={status}
+
+onChange={(e)=>
+
+setStatus(e.target.value)
+
+}
+
+>
+
+
+
+<option>
+
+Pending
+
+</option>
+
+
+<option>
+
+In Progress
+
+</option>
+
+
+<option>
+
+Resolved
+
+</option>
+
+
+<option>
+
+Rejected
+
+</option>
+
+
+
+</select>
+
+
+
+
+
+
+
+
+<h5 className="mt-4">
+
+Admin Remark
+
+</h5>
+
+
+
+
+
+<textarea
+
+className="form-control"
+
+rows="4"
+
+placeholder="Write remark..."
+
+value={remark}
+
+onChange={(e)=>
+
+setRemark(e.target.value)
+
+}
+
+/>
+
+
+
+
+
+
+
+<button
+
+className="btn btn-primary mt-4"
+
+onClick={updateComplaint}
+
+>
+
+Update Complaint
+
+</button>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+);
 
 
 }

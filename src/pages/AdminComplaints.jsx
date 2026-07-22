@@ -11,10 +11,12 @@ const [complaints,setComplaints] = useState([]);
 
 const [search,setSearch] = useState("");
 
+const [loading,setLoading] = useState(true);
+
+
 const navigate = useNavigate();
 
 const location = useLocation();
-
 
 
 
@@ -33,18 +35,28 @@ fetchComplaints();
 
 
 
-
-// FETCH COMPLAINTS
-
 const fetchComplaints = async()=>{
 
 
 try{
 
 
+const token = localStorage.getItem("adminToken");
+
+
 const res = await axios.get(
 
-"http://localhost:5000/api/complaints"
+"http://localhost:5000/api/complaints",
+
+{
+
+headers:{
+
+Authorization:`Bearer ${token}`
+
+}
+
+}
 
 );
 
@@ -55,6 +67,8 @@ setComplaints(res.data);
 
 
 }
+
+
 catch(error){
 
 
@@ -67,6 +81,16 @@ error.response?.data || error.message
 );
 
 
+
+}
+
+
+finally{
+
+
+setLoading(false);
+
+
 }
 
 
@@ -80,12 +104,14 @@ error.response?.data || error.message
 
 
 
-// STATUS UPDATE
-
 const updateStatus = async(id,status)=>{
 
 
 try{
+
+
+const token = localStorage.getItem("adminToken");
+
 
 
 await axios.put(
@@ -94,7 +120,17 @@ await axios.put(
 
 {
 
-status:status
+status
+
+},
+
+{
+
+headers:{
+
+Authorization:`Bearer ${token}`
+
+}
 
 }
 
@@ -102,10 +138,7 @@ status:status
 
 
 
-alert(
-"Status Updated"
-);
-
+alert("Status Updated");
 
 
 fetchComplaints();
@@ -113,10 +146,17 @@ fetchComplaints();
 
 
 }
+
 catch(error){
 
 
-console.log(error);
+console.log(
+
+"Update Error",
+
+error
+
+);
 
 
 }
@@ -132,9 +172,16 @@ console.log(error);
 
 
 
+const statusFilter = 
+
+new URLSearchParams(location.search).get("status");
 
 
-// FILTER COMPLAINTS
+
+
+
+
+
 
 const filteredComplaints = complaints.filter((item)=>{
 
@@ -142,9 +189,13 @@ const filteredComplaints = complaints.filter((item)=>{
 const searchMatch =
 
 item.title
+
 ?.toLowerCase()
+
 .includes(
+
 search.toLowerCase()
+
 );
 
 
@@ -157,8 +208,14 @@ return false;
 
 
 
+if(statusFilter){
 
-// Pending
+return item.status === statusFilter;
+
+}
+
+
+
 
 if(
 
@@ -166,16 +223,13 @@ location.pathname === "/admin/complaints/pending"
 
 ){
 
-return item.status === "Pending";
+return item.status==="Pending";
 
 }
 
 
 
 
-
-
-// Not Processed = In Progress
 
 if(
 
@@ -183,17 +237,13 @@ location.pathname === "/admin/complaints/not-processed"
 
 ){
 
-return item.status === "In Progress";
+return item.status==="In Progress";
 
 }
 
 
 
 
-
-
-
-// Closed = Resolved
 
 if(
 
@@ -201,10 +251,9 @@ location.pathname === "/admin/complaints/closed"
 
 ){
 
-return item.status === "Resolved";
+return item.status==="Resolved";
 
 }
-
 
 
 
@@ -213,8 +262,44 @@ return item.status === "Resolved";
 return true;
 
 
-
 });
+
+
+
+
+
+
+
+
+
+const getHeading = ()=>{
+
+
+if(statusFilter)
+
+return `${statusFilter} Complaints`;
+
+
+
+if(location.pathname.includes("pending"))
+
+return "Pending Complaints";
+
+
+if(location.pathname.includes("not-processed"))
+
+return "In Progress Complaints";
+
+
+if(location.pathname.includes("closed"))
+
+return "Resolved Complaints";
+
+
+return "All Complaints";
+
+
+};
 
 
 
@@ -237,53 +322,14 @@ return(
 
 
 
-
 <div className="complaints-header">
 
 
 <h2>
 
-
-{
-
-location.pathname === "/admin/complaints/pending"
-
-?
-
-"Pending Complaints"
-
-
-
-:
-
-location.pathname === "/admin/complaints/not-processed"
-
-?
-
-"Not Processed Complaints"
-
-
-
-:
-
-location.pathname === "/admin/complaints/closed"
-
-?
-
-"Closed Complaints"
-
-
-
-:
-
-"All Complaints"
-
-}
-
-
+{getHeading()}
 
 </h2>
-
 
 
 
@@ -319,6 +365,24 @@ setSearch(e.target.value)
 
 
 
+
+
+
+
+{
+
+loading ?
+
+
+<h4>
+
+Loading complaints...
+
+</h4>
+
+
+
+:
 
 
 
@@ -384,7 +448,7 @@ Action
 
 {
 
-filteredComplaints.length === 0 ?
+filteredComplaints.length===0 ?
 
 
 
@@ -412,8 +476,9 @@ No Complaints Found
 
 
 
-filteredComplaints.map((item,index)=>(
 
+
+filteredComplaints.map((item,index)=>(
 
 
 <tr key={item._id}>
@@ -428,13 +493,11 @@ filteredComplaints.map((item,index)=>(
 
 
 
-
 <td>
 
 {item.complaintId || "N/A"}
 
 </td>
-
 
 
 
@@ -456,15 +519,11 @@ item.userId?.name ||
 
 
 
-
-
 <td>
 
 {item.title}
 
 </td>
-
-
 
 
 
@@ -481,11 +540,25 @@ item.userId?.name ||
 
 
 
-
 <td>
 
 
+
 <select
+
+
+className={
+
+`status-select ${
+
+item.status
+
+.replace(" ","-")
+
+}`
+
+}
+
 
 
 value={item.status}
@@ -509,27 +582,36 @@ e.target.value
 
 
 <option>
+
 Pending
+
 </option>
 
 
 <option>
+
 In Progress
+
 </option>
 
 
 <option>
+
 Resolved
+
 </option>
 
 
 <option>
+
 Rejected
+
 </option>
 
 
 
 </select>
+
 
 
 </td>
@@ -558,7 +640,9 @@ onClick={()=>navigate(
 
 >
 
+
 View
+
 
 </button>
 
@@ -587,6 +671,12 @@ View
 
 
 
+}
+
+
+
+
+
 
 
 
@@ -609,7 +699,6 @@ Showing {filteredComplaints.length} complaints
 
 
 
-
 </div>
 
 
@@ -620,7 +709,6 @@ Showing {filteredComplaints.length} complaints
 
 
 }
-
 
 
 export default AdminComplaints;

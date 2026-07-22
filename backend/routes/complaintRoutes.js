@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const Complaint = require("../models/Complaint");
+const User = require("../models/User");
+
+const sendEmail = require("../utils/sendEmail");
 
 
 
@@ -13,52 +16,89 @@ const Complaint = require("../models/Complaint");
 
 router.post("/", async(req,res)=>{
 
-    try{
+try{
 
 
-        const count = await Complaint.countDocuments();
-
-
-
-        const complaint = new Complaint({
-
-            ...req.body,
-
-            complaintId:`LNMU-2026-${String(count + 1).padStart(4,"0")}`
-
-        });
+const count = await Complaint.countDocuments();
 
 
 
-        await complaint.save();
+const complaint = new Complaint({
+
+    ...req.body,
+
+    complaintId:`LNMU-2026-${String(count + 1).padStart(4,"0")}`
+
+});
 
 
 
-        res.status(201).json({
-
-            message:"Complaint submitted successfully",
-
-            complaint
-
-        });
+await complaint.save();
 
 
 
-    }
-    catch(error){
+
+// SEND EMAIL TO ADMIN
+
+await sendEmail(
+
+process.env.EMAIL_USER,
+
+"New Complaint Received - GRS Portal",
+
+`
+New complaint has been submitted.
+
+Complaint ID:
+${complaint.complaintId}
 
 
-        console.log(error);
+Title:
+${complaint.title}
 
 
-        res.status(500).json({
-
-            message:error.message
-
-        });
+Category:
+${complaint.category}
 
 
-    }
+Please login to Admin Dashboard to review.
+
+GRS Portal Team
+`
+
+);
+
+
+
+
+
+res.status(201).json({
+
+message:"Complaint submitted successfully",
+
+complaint
+
+});
+
+
+
+}
+
+catch(error){
+
+
+console.log(error);
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
 
 });
 
@@ -68,51 +108,58 @@ router.post("/", async(req,res)=>{
 
 
 
+
+
+
 // =======================
-// Get All Complaints (Admin)
+// Get All Complaints
 // =======================
 
 router.get("/", async(req,res)=>{
 
-    try{
+try{
 
 
-        const complaints = await Complaint.find()
+const complaints = await Complaint.find()
 
-        .populate(
+.populate(
 
-            "userId",
+"userId",
 
-            "name email mobile college"
+"name email mobile college"
 
-        )
+)
 
-        .sort({
+.sort({
 
-            createdAt:-1
-
-        });
-
-
-
-        res.json(complaints);
-
-
-
-    }
-    catch(error){
-
-
-        res.status(500).json({
-
-            message:error.message
-
-        });
-
-
-    }
+createdAt:-1
 
 });
+
+
+
+res.json(complaints);
+
+
+
+}
+
+catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
+
 
 
 
@@ -127,79 +174,73 @@ router.get("/", async(req,res)=>{
 
 router.get("/stats/:userId", async(req,res)=>{
 
-    try{
+
+try{
 
 
-        if(!mongoose.Types.ObjectId.isValid(req.params.userId)){
+if(!mongoose.Types.ObjectId.isValid(req.params.userId)){
 
 
-            return res.status(400).json({
+return res.status(400).json({
 
-                message:"Invalid User ID"
-
-            });
-
-
-        }
-
-
-
-        const complaints = await Complaint.find({
-
-            userId:req.params.userId
-
-        });
-
-
-
-        res.json({
-
-
-            total:complaints.length,
-
-
-            pending:complaints.filter(
-
-                c=>c.status==="Pending"
-
-            ).length,
-
-
-
-            resolved:complaints.filter(
-
-                c=>c.status==="Resolved"
-
-            ).length,
-
-
-
-            inProgress:complaints.filter(
-
-                c=>c.status==="In Progress"
-
-            ).length
-
-
-
-        });
-
-
-
-    }
-    catch(error){
-
-
-        res.status(500).json({
-
-            message:error.message
-
-        });
-
-
-    }
+message:"Invalid User ID"
 
 });
+
+
+}
+
+
+
+const complaints = await Complaint.find({
+
+userId:req.params.userId
+
+});
+
+
+
+res.json({
+
+total:complaints.length,
+
+
+pending:complaints.filter(
+c=>c.status==="Pending"
+).length,
+
+
+resolved:complaints.filter(
+c=>c.status==="Resolved"
+).length,
+
+
+inProgress:complaints.filter(
+c=>c.status==="In Progress"
+).length
+
+
+});
+
+
+}
+
+catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
+
 
 
 
@@ -211,43 +252,110 @@ router.get("/stats/:userId", async(req,res)=>{
 // Get User Complaints
 // =======================
 
-router.get("/:userId", async(req,res)=>{
+router.get("/user/:userId", async(req,res)=>{
 
-    try{
-
-
-        const complaints = await Complaint.find({
-
-            userId:req.params.userId
-
-        })
-
-        .sort({
-
-            createdAt:-1
-
-        });
+try{
 
 
+const complaints = await Complaint.find({
 
-        res.json(complaints);
+userId:req.params.userId
 
+})
 
+.sort({
 
-    }
-    catch(error){
-
-
-        res.status(500).json({
-
-            message:error.message
-
-        });
-
-
-    }
+createdAt:-1
 
 });
+
+
+
+res.json(complaints);
+
+
+
+}
+
+catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
+
+
+
+
+
+
+
+
+
+// =======================
+// Get Single Complaint
+// =======================
+
+router.get("/:id", async(req,res)=>{
+
+
+try{
+
+
+const complaint = await Complaint.findById(req.params.id)
+
+.populate(
+
+"userId",
+
+"name email mobile college"
+
+);
+
+
+
+if(!complaint){
+
+return res.status(404).json({
+
+message:"Complaint not found"
+
+});
+
+}
+
+
+
+res.json(complaint);
+
+
+
+}
+
+catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
 
 
 
@@ -262,71 +370,156 @@ router.get("/:userId", async(req,res)=>{
 
 router.put("/:id", async(req,res)=>{
 
-    try{
+
+try{
 
 
-        const complaint = await Complaint.findByIdAndUpdate(
+const complaint = await Complaint.findByIdAndUpdate(
 
-            req.params.id,
+req.params.id,
 
-            {
+{
 
-                status:req.body.status
+status:req.body.status,
 
-            },
+adminRemark:req.body.adminRemark
 
-            {
+},
 
-                new:true
+{
 
-            }
+new:true
 
-        );
+}
 
-
-
-        if(!complaint){
-
-
-            return res.status(404).json({
-
-                message:"Complaint not found"
-
-            });
-
-
-        }
+);
 
 
 
-        res.json({
-
-            message:"Complaint status updated successfully",
-
-            complaint
-
-        });
 
 
-
-    }
-    catch(error){
+if(!complaint){
 
 
-        console.log(error);
+return res.status(404).json({
 
-
-
-        res.status(500).json({
-
-            message:error.message
-
-        });
-
-
-    }
+message:"Complaint not found"
 
 });
+
+
+}
+
+
+
+
+
+
+// GET STUDENT DETAILS
+
+const student = await User.findById(
+
+complaint.userId
+
+);
+
+
+
+
+
+
+if(student){
+
+
+
+await sendEmail(
+
+student.email,
+
+
+"GRS Complaint Status Updated",
+
+
+`
+Hello ${student.name},
+
+
+Your complaint status has been updated.
+
+
+Complaint ID:
+
+${complaint.complaintId}
+
+
+
+Title:
+
+${complaint.title}
+
+
+
+New Status:
+
+${complaint.status}
+
+
+
+Admin Remark:
+
+${complaint.adminRemark || "No remark added"}
+
+
+
+Thank you.
+
+GRS Portal Team
+
+`
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+res.json({
+
+message:"Complaint updated successfully",
+
+complaint
+
+});
+
+
+
+}
+
+catch(error){
+
+
+console.log(error);
+
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
 
 
 

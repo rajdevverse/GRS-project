@@ -1,12 +1,30 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Tooltip,
+    ResponsiveContainer,
+    Cell
+} from "recharts";
+
 
 import DashboardCard from "../components/DashboardCard";
 import RecentComplaints from "../components/RecentComplaints";
 
 
 
+
 const AdminDashboard = () => {
+
+
+
+const navigate = useNavigate();
+
 
 
 
@@ -29,6 +47,7 @@ const [stats,setStats] = useState({
 
 
 const [loading,setLoading] = useState(true);
+
 
 
 
@@ -77,13 +96,13 @@ Authorization:`Bearer ${token}`
 
 
 
-
-
 setStats(res.data);
 
 
 
 }
+
+
 catch(error){
 
 
@@ -96,8 +115,10 @@ error.response?.data || error.message
 );
 
 
-
 }
+
+
+
 finally{
 
 
@@ -117,6 +138,65 @@ setLoading(false);
 
 
 
+const complaintData=[
+
+
+{
+
+name:"Pending",
+
+count:stats.pending
+
+},
+
+
+
+{
+
+name:"Progress",
+
+count:stats.inProgress
+
+},
+
+
+
+{
+
+name:"Resolved",
+
+count:stats.resolved
+
+}
+
+
+
+];
+
+
+
+
+
+
+
+const chartColors=[
+
+"#f59e0b",
+
+"#8b5cf6",
+
+"#10b981"
+
+];
+
+
+
+
+
+
+
+
+
 return(
 
 
@@ -126,8 +206,6 @@ return(
 
 
 
-
-{/* HEADER */}
 
 
 <div className="mb-4">
@@ -157,10 +235,6 @@ Welcome back, Administrator 👋
 
 
 
-{/* DASHBOARD CARDS */}
-
-
-
 <div className="row g-4">
 
 
@@ -178,6 +252,8 @@ value={loading ? "..." : stats.totalComplaints}
 icon="bi bi-file-earmark-text"
 
 color="#2563eb"
+
+onClick={()=>navigate("/admin/complaints")}
 
 />
 
@@ -201,6 +277,8 @@ icon="bi bi-hourglass-split"
 
 color="#f59e0b"
 
+onClick={()=>navigate("/admin/complaints?status=Pending")}
+
 />
 
 </div>
@@ -222,6 +300,8 @@ value={loading ? "..." : stats.inProgress}
 icon="bi bi-arrow-repeat"
 
 color="#8b5cf6"
+
+onClick={()=>navigate("/admin/complaints?status=In Progress")}
 
 />
 
@@ -245,6 +325,8 @@ icon="bi bi-check-circle"
 
 color="#10b981"
 
+onClick={()=>navigate("/admin/complaints?status=Resolved")}
+
 />
 
 </div>
@@ -267,6 +349,8 @@ icon="bi bi-people"
 
 color="#ec4899"
 
+onClick={()=>navigate("/admin/users")}
+
 />
 
 </div>
@@ -274,6 +358,8 @@ color="#ec4899"
 
 
 
+
+
 </div>
 
 
@@ -284,11 +370,21 @@ color="#ec4899"
 
 
 
-{/* CATEGORY SUMMARY */}
+{/* ANALYTICS */}
 
 
 
-<div className="card shadow-sm mt-5">
+<div className="row mt-5">
+
+
+
+
+
+<div className="col-lg-8">
+
+
+
+<div className="card shadow-sm">
 
 
 <div className="card-body">
@@ -296,7 +392,7 @@ color="#ec4899"
 
 <h4 className="fw-bold mb-4">
 
-Complaint Categories
+Complaint Status Analytics 📊
 
 </h4>
 
@@ -304,7 +400,127 @@ Complaint Categories
 
 
 
-<div className="row">
+
+
+<ResponsiveContainer
+
+width="100%"
+
+height={300}
+
+>
+
+
+<BarChart data={complaintData}>
+
+
+<XAxis dataKey="name"/>
+
+
+
+<YAxis />
+
+
+
+
+<Tooltip
+
+contentStyle={{
+
+background:"#ffffff",
+
+borderRadius:"10px",
+
+border:"none",
+
+boxShadow:"0 5px 20px rgba(0,0,0,.15)"
+
+}}
+
+/>
+
+
+
+
+
+<Bar
+
+dataKey="count"
+
+radius={[12,12,0,0]}
+
+>
+
+
+{
+
+complaintData.map((item,index)=>(
+
+
+<Cell
+
+key={index}
+
+fill={chartColors[index]}
+
+/>
+
+
+))
+
+
+}
+
+
+
+</Bar>
+
+
+
+</BarChart>
+
+
+
+</ResponsiveContainer>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div className="col-lg-4">
+
+
+
+<div className="card shadow-sm">
+
+
+<div className="card-body">
+
+
+<h4 className="fw-bold mb-4">
+
+Categories
+
+</h4>
+
+
 
 
 
@@ -318,34 +534,29 @@ stats.categoryStats.map((item,index)=>(
 
 <div
 
-className="col-md-3 mb-3"
-
 key={index}
+
+className="d-flex justify-content-between border-bottom py-2"
 
 >
 
 
-<div className="border rounded p-3">
-
-
-<h6 className="text-muted">
+<span>
 
 {item._id || "Other"}
 
-</h6>
+</span>
 
 
-<h3 className="fw-bold">
+<b>
 
 {item.count}
 
-</h3>
+</b>
 
 
 </div>
 
-
-</div>
 
 
 ))
@@ -353,11 +564,11 @@ key={index}
 
 :
 
-<div className="text-muted">
+<p className="text-muted">
 
 No category data available
 
-</div>
+</p>
 
 
 
@@ -365,6 +576,11 @@ No category data available
 
 
 
+
+
+</div>
+
+
 </div>
 
 
@@ -372,6 +588,10 @@ No category data available
 </div>
 
 
+
+
+
+
 </div>
 
 
@@ -379,10 +599,6 @@ No category data available
 
 
 
-
-
-
-{/* RECENT COMPLAINTS */}
 
 
 
